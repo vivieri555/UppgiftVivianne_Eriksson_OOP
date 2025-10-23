@@ -7,7 +7,7 @@ public class Main {
     boolean running = true;
     Scanner input = new Scanner(System.in);
     while(running){
-        System.out.println("Välkommen till din biluthyrning!");
+        System.out.println("Välkommen till din lokala biluthyrning!");
         System.out.println("Tryck 1 för att fylla i medlemsuppgifter");
         System.out.println("Tryck 2 för att söka på medlemmar");
         System.out.println("Tryck 3 för att ändra på befintlig medlem");
