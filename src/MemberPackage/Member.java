@@ -1,4 +1,4 @@
-package Member;
+package MemberPackage;
 
 public class Member {
     private int id;

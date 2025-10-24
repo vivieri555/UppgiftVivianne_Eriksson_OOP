@@ -1,4 +1,4 @@
-package Member;
+package MemberPackage;
 
 import java.util.ArrayList;
 
