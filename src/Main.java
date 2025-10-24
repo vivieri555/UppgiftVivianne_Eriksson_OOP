@@ -1,6 +1,7 @@
 import MemberPackage.*;
 import Vehicle.ElectricCar;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
@@ -12,7 +13,12 @@ public class Main {
         ElectricCar electricCar = new ElectricCar();
         Member member1 = new Member(1, "Vivianne", "Premium", "Vet ej");
         MemberRegistry memberRegistry = new MemberRegistry();
-        
+        ArrayList<Member> pickUpList = memberRegistry.getMembers();
+        memberRegistry.add(member1);
+
+        System.out.println(pickUpList.size());   //lista på antal medlemmar i listan
+        System.out.println(memberRegistry.getMembers()); //ger bara adressen till members platsen
+
 
     while(running){
         System.out.println("Välkommen till din lokala biluthyrning!");
@@ -33,7 +39,27 @@ public class Main {
         }
         switch(answer){
             case 1:
+                System.out.println("Ange uppgifter för en ny medlem, ange id först");
+                Member member3 = new Member();
+                member3.setId(input.nextInt());
+                input.nextLine();
+                System.out.println("Skriv in namnet");
+                member3.setName(input.nextLine());
+                System.out.println("Skriv in statusen om Standard eller Premium");
+                member3.setStatus(input.nextLine());
+              // member3 = input.nextLine(); //Hur skriva in member i listan?
+                Member member2 = new Member();
+                memberRegistry.add(member3);
                 break;
+            case 2:
+                input.nextLine();
+                System.out.println("Vilken medlem vill du söka efter?");
+                String search = input.nextLine();
+                memberRegistry.searchAllMembers(String.valueOf(search));
+                break;
+            case 3:
+                System.out.println("Vilken medlem vill du ändra?");
+                String change = input.nextLine();
             case 9:
                 System.out.println("Välkommen åter!");
                 running = false;

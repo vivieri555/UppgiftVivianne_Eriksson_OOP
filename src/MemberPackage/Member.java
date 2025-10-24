@@ -21,7 +21,7 @@ public class Member {
     public String getName(){
         return name;
     }
-    public void setName(){
+    public void setName(String name){
         this.name = name;
     }
     public String getStatus(){
@@ -36,4 +36,5 @@ public class Member {
     public void setHistory(String history){
         this.history = history;
     }
+    public String toString(){return name;}
 }
