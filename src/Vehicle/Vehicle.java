@@ -1,5 +1,7 @@
 package Vehicle;
 
+import java.util.ArrayList;
+
 public class Vehicle extends Item{
     private String brand;
     private String model;
@@ -11,5 +13,10 @@ public class Vehicle extends Item{
     }
     //Göra implementering/override i andra klasserna, start med knapp, vrida knapp
     public void start(){
+    }
+    private ArrayList<Vehicle> vehicle = new ArrayList<Vehicle>();
+    //add vehicles vehicle.add(new ElectricCar("5", "95"));
+    public void addVehicle(Vehicle v){
+        vehicle.add(v);
     }
 }

@@ -1,5 +1,5 @@
 import MemberPackage.*;
-import Vehicle.ElectricCar;
+import Vehicle.*;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -60,6 +60,10 @@ public class Main {
             case 3:
                 System.out.println("Vilken medlem vill du ändra?");
                 String change = input.nextLine();
+                //lägga in metod
+            case 6:
+                System.out.println("Välkommen att boka en bil");
+                break;
             case 9:
                 System.out.println("Välkommen åter!");
                 running = false;
