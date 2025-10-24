@@ -27,4 +27,9 @@ public class ElectricCar extends Vehicle{
         this.batteryLevel = batteryLevel;
     }
 
+    @Override
+    public void start() {
+        super.start();
+        System.out.println("Vrida på knappen för att starta");
+    }
 }

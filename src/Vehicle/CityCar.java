@@ -21,4 +21,9 @@ public class CityCar extends Vehicle{
     public void setDoors(String doors){
         this.doors = doors;
     }
+    @Override
+    public void start(){
+        super.start();
+        System.out.println("Tryck på knappen för att starta");
+    }
 }

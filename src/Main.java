@@ -1,3 +1,5 @@
+import Vehicle.ElectricCar;
+
 import java.util.Scanner;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
@@ -6,6 +8,7 @@ public class Main {
     public static void main(String[] args) {
     boolean running = true;
     Scanner input = new Scanner(System.in);
+        ElectricCar electricCar = new ElectricCar();
     while(running){
         System.out.println("Välkommen till din lokala biluthyrning!");
         System.out.println("Tryck 1 för att fylla i medlemsuppgifter");
@@ -14,6 +17,7 @@ public class Main {
         System.out.println("Tryck 4 för att se vilka fordon som finns");
         System.out.println("Tryck 5 för att söka på fordon");
         System.out.println("Tryck 6 för att boka en bil");
+        System.out.println("Tryck 7 för att summera intäkter");
         System.out.println("Tryck 9 för att avsluta tjänsten");
         int answer = 0;
         try{

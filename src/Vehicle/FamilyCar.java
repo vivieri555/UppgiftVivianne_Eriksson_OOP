@@ -30,4 +30,9 @@ public class FamilyCar extends Vehicle{
     public void setHasRearCamera(boolean hasRearCamera){
         this.hasRearCamera = hasRearCamera;
     }
+    @Override
+    public void start(){
+        super.start();
+        System.out.println("Sätt in nyckeln i nyckelhålet för att starta");
+    }
 }
