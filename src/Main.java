@@ -1,3 +1,4 @@
+import Member.Member;
 import Vehicle.ElectricCar;
 
 import java.util.Scanner;
@@ -9,6 +10,10 @@ public class Main {
     boolean running = true;
     Scanner input = new Scanner(System.in);
         ElectricCar electricCar = new ElectricCar();
+        Member member1 = new Member(1, "Vivianne", "Premium", "Vet ej");
+        MemberRegistry memberRegistry = new Member.MemberRegistry();
+        
+
     while(running){
         System.out.println("Välkommen till din lokala biluthyrning!");
         System.out.println("Tryck 1 för att fylla i medlemsuppgifter");
