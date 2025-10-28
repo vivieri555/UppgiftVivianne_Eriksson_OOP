@@ -1,5 +1,5 @@
 package Rental;
 
 public class RentalService {
-    //innehålla affärslogik
+    //innehålla affärslogik boka / avsluta uthyrning
 }

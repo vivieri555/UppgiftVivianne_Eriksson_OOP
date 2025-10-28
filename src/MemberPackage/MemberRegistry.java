@@ -5,7 +5,6 @@ import java.util.Scanner;
 
 public class MemberRegistry {
 
-Scanner input = new Scanner(System.in);
     private ArrayList<Member> members = new ArrayList<Member>();
 
 
@@ -21,10 +20,9 @@ public ArrayList<Member>getMembers(){
 public void add(Member member){
     members.add(member);
 }
-// lägg till remove
+// remove medlem
     public void delete(Member member) {
         {
-            System.out.println("Nu har du raderat " + member);
             members.remove(member);
         }
     }
