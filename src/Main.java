@@ -91,6 +91,12 @@ public class Main {
                         case 5:
                             inventory.carList();
                     break;
+                    case 6:
+                        input.nextLine();
+                        System.out.println("Vilken bil vill du söka på?");
+                        String searchCar = input.nextLine();
+                        Vehicle searchC = inventory.Sökfunktion(searchCar);
+                        break;
                     case 7:
                         System.out.println("Välkommen att boka en bil");
                         break;
