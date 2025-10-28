@@ -10,15 +10,19 @@ import java.util.ArrayList;
 public class Inventory {
     private ArrayList<Vehicle> vehicleList = new ArrayList<Vehicle>();
     public Inventory(){}
-    public Inventory(Vehicle vehicle){
-
-        //this.vehicleList = vehicle;
+    public Inventory(ArrayList<Vehicle> vehicle){
+        //this.vehicleList<Vehicle> vehicleList = vehicle;
     }
 
     public ArrayList<Vehicle> getVehicleList(){
-        return vehicleList;
+        return new ArrayList<Vehicle>(vehicleList);
     }
     public void addVehicle(Vehicle v){
         vehicleList.add(v);
+    }
+    public void carList(){
+        for(Vehicle car: vehicleList){
+            System.out.println(car);
+        }
     }
 }

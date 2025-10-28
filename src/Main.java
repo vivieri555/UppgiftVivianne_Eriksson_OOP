@@ -15,7 +15,6 @@ public class Main {
         ElectricCar electricCar = new ElectricCar();
         Vehicle vehicle = new Vehicle();
         Member member1 = new Member(1, "Vivianne", "Premium", "Vet ej");
-        Member member = new Member();
         MemberRegistry memberRegistry = new MemberRegistry();
         MembershipService membershipService = new MembershipService(memberRegistry);
         ArrayList<Member> pickUpList = memberRegistry.getMembers();
@@ -88,6 +87,10 @@ public class Main {
                             System.out.println("Medlemmen " + memberD + " borttagen");
                         }
                         break;
+                        //Skriver bara ut adressen men inte bilarna inlagda
+                        case 5:
+                            inventory.carList();
+                    break;
                     case 7:
                         System.out.println("Välkommen att boka en bil");
                         break;
