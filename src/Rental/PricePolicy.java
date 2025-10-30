@@ -7,5 +7,5 @@ public interface PricePolicy {
     //(interface) + konkreta strategier, ex. standard, student, premium
     //pris per dag
    double cost(int time);
-    String status();
+    double getDiscountedCost(Rental rental);
 }

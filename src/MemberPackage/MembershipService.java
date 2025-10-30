@@ -25,23 +25,6 @@ public class MembershipService{
             System.out.println("Medlemmen hittas inte");
         }
     }
-    //Lägg in som switch case istället?
-public void changeNewMethod(Member sMember){
-    System.out.println("Vad vill du ändra på medlemmen?");
-    System.out.println("Skriv in [namn] eller [status] om du vill ändra");
-    if(input.nextLine().equalsIgnoreCase("namn")){
-        input.nextLine();
-        System.out.println("Skriv in ändringen på namnet");
-        sMember.setName(input.nextLine());
-        System.out.println("Du har nu ändrat namnet till " + sMember);
-    }
-    else if(input.nextLine().equalsIgnoreCase("status")){
-        //input.nextLine();
-        System.out.println("Skriv in status Standard eller Premium");
-        sMember.setStatus(input.nextLine());
-        System.out.println("Du har nu ändrat statusen på medlem " + sMember);
-    }
-}
             public void changeSwitch(Member sMember){
                 System.out.println("Vad vill du ändra på medlemmen?");
                 System.out.println("Skriv in [namn], [status] eller [historik] på det du vill ändra");

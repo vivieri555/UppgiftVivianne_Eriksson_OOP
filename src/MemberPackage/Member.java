@@ -47,5 +47,8 @@ public class Member {
     public void setHistory(String history) {
         this.history = history;
     }
+    public String toString(){
+        return name;
+    }
 }
 
