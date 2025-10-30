@@ -4,8 +4,8 @@ public class CityCar extends Vehicle{
     private String color;
     private String doors;
 
-    public CityCar(String brand, String model, String color, String doors){
-        super(brand, model);
+    public CityCar(String brand, String model, boolean loanable, String color, String doors){
+        super(brand, model, loanable);
         this.color = color;
         this.doors = doors;
     }

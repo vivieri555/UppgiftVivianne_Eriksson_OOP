@@ -6,8 +6,8 @@ public class FamilyCar extends Vehicle{
     private boolean hasRearCamera;
 
     public FamilyCar(){}
-    public FamilyCar(String brand, String model, String doors, String gearbox, boolean hasRearCamera){
-        super(brand, model);
+    public FamilyCar(String brand, String model, boolean loanable, String doors, String gearbox, boolean hasRearCamera){
+        super(brand, model, loanable);
         this.doors = doors;
         this.gearbox = gearbox;
         this.hasRearCamera = hasRearCamera;

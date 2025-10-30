@@ -65,26 +65,4 @@ public void changeNewMethod(Member sMember){
                 break;
                 }
             }
-//    public void changeMember(){     //Funkar inte
-//
-//        for(Member member: memberRegistry.getMembers()){
-//            if (member.getName().equals(change)) {
-//                System.out.println("Vad vill du ändra på medlemmen?");
-//                System.out.println("Skriv in [namn] eller [status] om du vill ändra");
-//                if(input.nextLine().equalsIgnoreCase("status")){
-//                System.out.println("Skriv in status du vill ha på medlemmen antingen Standard eller Premium");
-//                member.setStatus(input.nextLine());
-//                }
-//                else if(input.nextLine().equalsIgnoreCase("namn")){
-//                    System.out.println("Skriv in ändringen på namnet");
-//                    member.setName(input.nextLine());
-//                }
-//                //ändra på ett objekts värde
-//
-//            else {
-//            System.out.println("Medlemmen finns inte");
-//                }
-//            }
-//        }
-//  }
 }
