@@ -1,14 +1,10 @@
 package Rental;
-
-import MemberPackage.Member;
 import Vehicle.Vehicle;
-
 import java.util.ArrayList;
 import java.util.Scanner;
+import Vehicle.*;
 
 public class RentalService implements PricePolicy{
-    //innehålla affärslogik boka / avsluta uthyrning
-    Scanner input = new Scanner(System.in);
     Inventory inventory;
     public RentalService(){}
     public RentalService(Inventory inventory){
@@ -19,16 +15,22 @@ public class RentalService implements PricePolicy{
     public void add(Rental rental){
         rentals.add(rental);
     }
-            //Söka upp car Brand, hur skriver jag ut alla attribut på den bilen jag hittat?
-    public Vehicle searchBrand(String search) {
+    public void sum(){
+        double sum = 0;
+        for(Rental cost: rentals){
+            System.out.println("Intäkter: " + cost.getCost());
+            sum = sum + cost.getCost();
+        } System.out.println("Summan av intäkterna: " + sum + " kr");
+    }
+            //Söka upp car
+    public Vehicle searchCar(String search) {
         for (Vehicle car : inventory.getVehicleList()) {
-            if (car.getBrand().contains(search)) {
+            if (car.getBrand().contains(search) || car.getModel().contains(search)) {
                 return car;
             }
         }
         return null;
     }
-
     @Override
     public double cost(int days) {
         return 1000 * days;
@@ -61,5 +63,48 @@ public class RentalService implements PricePolicy{
             discountedCost = cost(rental.getRentalDays()) -100;
         }
         return discountedCost;
+    }
+    //Filtrera på olika bilar med switch case?
+    public void cars(){
+        Scanner input = new Scanner(System.in);
+            System.out.println("Välj 1 om du vill söka bil efter varumärke eller brand");
+            System.out.println("Välj 2 om du vill söka på elektriska bilar");
+            System.out.println("Välj 3 om du vill söka på familjebilar");
+            System.out.println("Välj 4 om du vill söka på stadsbilar");
+            System.out.println("Välj 5 om du vill söka på lediga bilar");
+
+            String answer = input.nextLine();
+            switch (answer) {
+                case "1":
+                    System.out.println("Vilket bilmärke eller modell vill du söka på");
+                    String userAnswer = input.nextLine();
+                    Vehicle search = searchCar(userAnswer);
+                    if(search == null){
+                        System.out.println("Bilen finns inte");
+                    }
+                    else{
+                        System.out.println("Bilinfo: " + search.getBrand() + ", " + search.getModel() + ", " + search.isLoanable() + ", " + search);
+                    }
+                    break;
+                case "2":
+                    //hur skriver jag ut lista på elektriska bilar?
+                    System.out.println("De elektriska bilarna som finns:");
+                        for(Vehicle vehicle: inventory.getVehicleList()) {
+                            if(vehicle instanceof ElectricCar){
+                                //System.out.println("ElectricCar");
+                                System.out.println(vehicle.getBrand() + ", Modell: " + vehicle.getModel() + ", Batterylevel: " + ((ElectricCar)vehicle).getBatteryLevel());
+                                System.out.println("Dörrar: " + ((ElectricCar) vehicle).getDoors());
+                            }
+                            else if(vehicle instanceof FamilyCar){
+                                System.out.println("Gearbox: " + ((FamilyCar)vehicle).getGearbox());
+                            }
+                        }
+
+                    break;
+                case "3":
+                    break;
+                default:
+                    break;
+        }
     }
 }

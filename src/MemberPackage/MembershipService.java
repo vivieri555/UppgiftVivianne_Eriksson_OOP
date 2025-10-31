@@ -1,10 +1,7 @@
 package MemberPackage;
-
 import java.util.Scanner;
 
-
 public class MembershipService{
-    //innehålla affärslogik
     Scanner input = new Scanner(System.in);
     MemberRegistry memberRegistry;
 
@@ -12,7 +9,6 @@ public class MembershipService{
         this.memberRegistry = memberRegistry;
     }
     //ger lista varje gång istället för att bara skriva ut ett objekt
-
     public Member searchMemberList(String searchedMember){
         for(Member member: memberRegistry.getMembers()){
             if(member.getName().contains(searchedMember)){

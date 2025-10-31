@@ -2,15 +2,10 @@ package Rental;
 
 import MemberPackage.Member;
 import Vehicle.Vehicle;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Rental{
-    //(kopplar member och item för en viss tidsperiod)
-    //Map för att koppla member. item?
+
     Member member;
     Vehicle vehicle;
     private int rentalDays;
@@ -45,8 +40,5 @@ public class Rental{
     }
     public void setVehicle(Vehicle vehicle){
         this.vehicle = vehicle;
-    }
-    public LocalDate loanDays(int days){
-        return LocalDate.now().plusDays(days);
     }
 }
