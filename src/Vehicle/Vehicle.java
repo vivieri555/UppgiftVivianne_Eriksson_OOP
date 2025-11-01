@@ -28,7 +28,6 @@ public class Vehicle extends Item{
     public void setLoanable(boolean loanable){
         this.loanable = loanable;
     }
-    //Göra implementering/override i andra klasserna, start med knapp, vrida knapp
     public void start(){
     }
     public String toString(){

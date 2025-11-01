@@ -3,7 +3,6 @@ import Rental.Inventory;
 import Rental.Rental;
 import Rental.RentalService;
 import Vehicle.*;
-import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -19,11 +18,6 @@ public class Main {
         memberRegistry.add(member1);
         MembershipService membershipService = new MembershipService(memberRegistry);
         RentalService rentalService = new RentalService(inventory);
-
-        ArrayList<Member> pickUpList = memberRegistry.getMembers();
-        System.out.println(pickUpList.size());   //lista på antal medlemmar i listan
-        System.out.println(memberRegistry.getMembers()); //vilka medlemmar som finns i listan
-
 
         inventory.addVehicle(new FamilyCar("VW", "Passat", true, "5", "Manuell", true));
         inventory.addVehicle(new ElectricCar("BMW", "z4", true,"5", "95"));
@@ -45,7 +39,6 @@ public class Main {
             System.out.println("Tryck 9 för att avsluta tjänsten");
             int answer;
             try { answer = input.nextInt(); }
-
             catch (InputMismatchException e) {
                 System.out.println("Du behöver ange ett giltigt menyval mellan 1-9");
                 input.next();
@@ -54,9 +47,8 @@ public class Main {
                 switch (answer) {
                     case 1:
                         Member member3 = new Member();
-                        //random.next nummer på id kanske?
-                        System.out.println("Ange uppgifter för en ny medlem, ange id först");
-                        try{member3.setId(input.nextInt());}
+                        System.out.println("Ange uppgifter för en ny medlem, ange siffra för id först");
+                        try{member3.setId(input.nextInt()); }
                         catch(InputMismatchException e){
                             System.out.println("Ange en siffra");
                             input.nextLine();
@@ -64,7 +56,7 @@ public class Main {
                         input.nextLine();
                         System.out.println("Skriv in namnet");
                         member3.setName(input.nextLine());
-                        System.out.println("Skriv in statusen om Standard eller Premium");
+                        System.out.println("Skriv in statusen antingen Standard eller Premium");
                         member3.setStatus(input.nextLine());
                         memberRegistry.add(member3);
                         System.out.println("Du har nu lagt till medlemmen " + member3.getName());
@@ -78,7 +70,8 @@ public class Main {
                         if(searchedMember == null){
                             System.out.println("Medlemmen finns inte");
                         } else {
-                            System.out.println("Hittat medlemmen " + searchedMember);
+                            System.out.println("Hittat medlemmen ID: " + searchedMember.getId() + ", "+ searchedMember + ", "
+                                    + searchedMember.getStatus() + ", " + searchedMember.getHistory());
                         }
                         break;
                     case 3:
@@ -86,7 +79,6 @@ public class Main {
                         System.out.println("Vilken medlem vill du ändra på?");
                         String changeMember = input.nextLine();
                         Member changeMember1 = membershipService.searchMemberList(changeMember);
-                        //letat upp medlem
                         if(changeMember1 == null){
                         System.out.println("Medlemmen finns inte");
                         }
@@ -107,20 +99,8 @@ public class Main {
                             System.out.println("Medlemmen " + memberD + " borttagen");
                         }
                         break;
-
                         case 5:
                             rentalService.cars();
-                            ElectricCar electricCar = new ElectricCar();
-                            FamilyCar familyCar = new FamilyCar();
-
-//                            input.nextLine();
-//                            System.out.println("Vilket bilmärke vill du söka på?");
-//                            String searchCar = input.nextLine();
-//                            Vehicle searchC = rentalService.searchCar(searchCar);
-//                            if(searchC == null){
-//                                System.out.println("Bilen finns inte");
-//                            }
-
                     break;
                     case 6:
                         var rental = new Rental();
@@ -153,6 +133,9 @@ public class Main {
                                 double discount = rentalService.getDiscountedCost(rental);
                                 rental.setCost(discount);
                                 rentalService.listRental();
+                                input.nextLine();
+                                System.out.println("Skriv in en ändring på historiken");
+                                searchNamed.setHistory(input.nextLine());
                             }
                         }
                         break;

@@ -8,7 +8,6 @@ public class MembershipService{
     public MembershipService(MemberRegistry memberRegistry){
         this.memberRegistry = memberRegistry;
     }
-    //ger lista varje gång istället för att bara skriva ut ett objekt
     public Member searchMemberList(String searchedMember){
         for(Member member: memberRegistry.getMembers()){
             if(member.getName().contains(searchedMember)){
@@ -16,10 +15,9 @@ public class MembershipService{
             }
         } return null;
     }
-    public void ifUserNotFound(Member member){
-        if(member == null){
-            System.out.println("Medlemmen hittas inte");
-        }
+    public void changeHistory(Member member){
+        System.out.println("Skriv in ändring till historiken");
+        member.setHistory(input.nextLine());
     }
             public void changeSwitch(Member sMember){
                 System.out.println("Vad vill du ändra på medlemmen?");
@@ -37,7 +35,7 @@ public class MembershipService{
             System.out.println("Du har nu ändrat statusen på medlem " + sMember);
             break;
         case "historik":
-            System.out.println("ändra historiken metod");
+            changeHistory(sMember);
             break;
             default:
                 System.out.println("Inte gjort ett giltigt val");

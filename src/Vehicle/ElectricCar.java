@@ -11,7 +11,6 @@ public class ElectricCar extends Vehicle{
         super(brand, model, loanable);
         this.doors = doors;
         this.batteryLevel = batteryLevel;
-
     }
 
     public String getDoors(){

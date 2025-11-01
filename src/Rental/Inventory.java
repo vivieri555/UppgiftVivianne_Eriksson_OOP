@@ -1,6 +1,5 @@
 package Rental;
 import Vehicle.Vehicle;
-
 import java.util.ArrayList;
 
 public class Inventory {

@@ -22,7 +22,6 @@ public class RentalService implements PricePolicy{
             sum = sum + cost.getCost();
         } System.out.println("Summan av intäkterna: " + sum + " kr");
     }
-            //Söka upp car
     public Vehicle searchCar(String search) {
         for (Vehicle car : inventory.getVehicleList()) {
             if (car.getBrand().contains(search) || car.getModel().contains(search)) {
@@ -35,7 +34,6 @@ public class RentalService implements PricePolicy{
     public double cost(int days) {
         return 1000 * days;
     }
-    //Skapa metod för att skriva ut rentals listan med objekten i
         public void listRental(){
         for (Rental rental : rentals){
             System.out.println("Uthyrningens uppgifter:");
@@ -62,17 +60,18 @@ public class RentalService implements PricePolicy{
             System.out.println("Medlemmen kan få rabatt 100 kr på varje uthyrning");
             discountedCost = cost(rental.getRentalDays()) -100;
         }
+        else{
+            return cost(rental.getRentalDays());
+        }
         return discountedCost;
     }
-    //Filtrera på olika bilar med switch case?
     public void cars(){
         Scanner input = new Scanner(System.in);
             System.out.println("Välj 1 om du vill söka bil efter varumärke eller brand");
-            System.out.println("Välj 2 om du vill söka på elektriska bilar");
-            System.out.println("Välj 3 om du vill söka på familjebilar");
-            System.out.println("Välj 4 om du vill söka på stadsbilar");
-            System.out.println("Välj 5 om du vill söka på lediga bilar");
-
+            System.out.println("Välj 2 om du vill lista elektriska bilar");
+            System.out.println("Välj 3 om du vill lista familjebilar");
+            System.out.println("Välj 4 om du vill lista stadsbilar");
+            System.out.println("Välj 5 om du vill se tillgängliga bilar");
             String answer = input.nextLine();
             switch (answer) {
                 case "1":
@@ -87,24 +86,48 @@ public class RentalService implements PricePolicy{
                     }
                     break;
                 case "2":
-                    //hur skriver jag ut lista på elektriska bilar?
                     System.out.println("De elektriska bilarna som finns:");
                         for(Vehicle vehicle: inventory.getVehicleList()) {
                             if(vehicle instanceof ElectricCar){
-                                //System.out.println("ElectricCar");
-                                System.out.println(vehicle.getBrand() + ", Modell: " + vehicle.getModel() + ", Batterylevel: " + ((ElectricCar)vehicle).getBatteryLevel());
-                                System.out.println("Dörrar: " + ((ElectricCar) vehicle).getDoors());
-                            }
-                            else if(vehicle instanceof FamilyCar){
-                                System.out.println("Gearbox: " + ((FamilyCar)vehicle).getGearbox());
+                                System.out.println(vehicle.getBrand() + ", Modell: " + vehicle.getModel() + ", Batterylevel: "
+                                        + ((ElectricCar)vehicle).getBatteryLevel() + ", Dörrar: " + ((ElectricCar) vehicle).getDoors());
+                                vehicle.start();
                             }
                         }
-
                     break;
                 case "3":
+                    System.out.println("Familjebilarna som finns:");
+                    for(Vehicle vehicle: inventory.getVehicleList()){
+                     if(vehicle instanceof FamilyCar){
+                    System.out.println(vehicle.getBrand() + ", Modell: " + vehicle.getModel() +", Gearbox: " + ((FamilyCar)vehicle).getGearbox()+
+                            ", Backkamera: " + ((FamilyCar) vehicle).isHasRearCamera());
+                    vehicle.start();
+                     }
+                }
+                    break;
+                case "4":
+                    System.out.println("Stadsbilarna som finns:");
+                    for(Vehicle vehicle: inventory.getVehicleList()){
+                        if(vehicle instanceof CityCar){
+                            System.out.println(vehicle.getBrand() + ", Modell: "+ vehicle.getModel()+ ", Färg:"+ ((CityCar)vehicle).getColor()
+                                    + ", Dörrar:" + ((CityCar) vehicle).getDoors());
+                            vehicle.start();
+                        }
+                    }
+                    break;
+                case "5":
+                    available();
                     break;
                 default:
                     break;
         }
     }
+    public void available(){
+        for(Vehicle vehicle: inventory.getVehicleList()){
+            if(vehicle.isLoanable()){
+                System.out.println(vehicle + " är tillgänglig att låna.");
+            }
+        }
+    }
+
 }

@@ -1,8 +1,6 @@
 package Rental;
-
 import MemberPackage.Member;
 import Vehicle.Vehicle;
-import java.time.LocalDate;
 
 public class Rental{
 
