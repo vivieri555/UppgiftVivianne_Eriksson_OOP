@@ -1,9 +1,11 @@
+import Exceptions.AlertBox;
 import MemberPackage.*;
 import Rental.Inventory;
 import Rental.Rental;
 import Rental.RentalService;
 import Vehicle.*;
 import javafx.application.Application;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -12,105 +14,22 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import File.FileService;
 
 import java.io.*;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main extends Application {
     public static void main(String[] args) {
         launch(args);
 
-        boolean running = true;
-        Scanner input = new Scanner(System.in);
-        Vehicle vehicle = new Vehicle();
-        Inventory inventory = new Inventory();
-
-        Member member1 = new Member(1, "Vivianne", "Premium", "Ingen uthyrnings historik");
-        MemberRegistry memberRegistry = new MemberRegistry();
-        memberRegistry.add(member1);
-        MembershipService membershipService = new MembershipService(memberRegistry);
-        RentalService rentalService = new RentalService(inventory);
-
-        inventory.addVehicle(new FamilyCar("VW", "Passat", true, "5", "Manuell", true));
-        inventory.addVehicle(new ElectricCar("BMW", "z4", true,"5", "95"));
-        inventory.addVehicle(new ElectricCar("Tesla", "X", true, "5", "98"));
-        inventory.addVehicle(new CityCar("Mini","Mini Cooper",true, "röd","3"));
-        inventory.addVehicle(new CityCar("VW", "Up!", true, "Vit", "3"));
-        inventory.addVehicle(new FamilyCar("Volvo", "V90", true, "5","Automat", true));
-
-     /*   while (running) {
-//            System.out.println("Tryck 1 för att fylla i ny medlem");
-//            System.out.println("Tryck 2 för att söka på medlemmar");
-//            System.out.println("Tryck 3 för att ändra på befintlig medlem");
-//            System.out.println("Tryck 4 för att ta bort en medlem");
+     /*
 //            System.out.println("Tryck 5 för att lista/söka på fordon");
 //            System.out.println("Tryck 6 för att boka en bil");
 //            System.out.println("Tryck 7 för att avsluta en uthyrning av bil");
 //            System.out.println("Tryck 8 för att summera intäkter");
-//            System.out.println("Tryck 9 för att avsluta tjänsten");
-            int answer;
-            try { answer = input.nextInt(); }
-            catch (InputMismatchException e) {
-                System.out.println("Du behöver ange ett giltigt menyval mellan 1-9");
-                input.next();
-                continue;
-            }
-            switch (answer) {
-                case 1:
-                    Member member3 = new Member();
-                    System.out.println("Ange uppgifter för en ny medlem, ange siffra för id först");
-                    try{member3.setId(input.nextInt()); }
-                    catch(InputMismatchException e){
-                        System.out.println("Ange en siffra");
-                        input.nextLine();
-                    }
-                    input.nextLine();
-                    System.out.println("Skriv in namnet");
-                    member3.setName(input.nextLine());
-                    System.out.println("Skriv in statusen antingen Standard eller Premium");
-                    member3.setStatus(input.nextLine());
-                    memberRegistry.add(member3);
-                    System.out.println("Du har nu lagt till medlemmen " + member3.getName());
-                    break;
-                case 2:
-                    input.nextLine();
-                    System.out.println("Skriv in namnet på medlem du vill söka efter:");
-                    String search = input.nextLine();
-                    membershipService.searchMemberList(search);
-                    Member searchedMember = membershipService.searchMemberList(search);
-                    if(searchedMember == null){
-                        System.out.println("Medlemmen finns inte");
-                    } else {
-                        System.out.println("Hittat medlemmen ID: " + searchedMember.getId() + ", "+ searchedMember + ", "
-                                + searchedMember.getStatus() + ", " + searchedMember.getHistory());
-                    }
-                    break;
-                case 3:
-                    input.nextLine();
-                    System.out.println("Vilken medlem vill du ändra på?");
-                    String changeMember = input.nextLine();
-                    Member changeMember1 = membershipService.searchMemberList(changeMember);
-                    if(changeMember1 == null){
-                        System.out.println("Medlemmen finns inte");
-                    }
-                    else{
-                        membershipService.changeSwitch(changeMember1);
-                    }
-                    break;
-                case 4:
-                    input.nextLine();
-                    System.out.println("Vilken medlem vill du radera?");
-                    String answerDelete = input.nextLine();
-                    Member memberD = membershipService.searchMemberList(answerDelete);
-                    if(memberD == null){
-                        System.out.println("Medlemmen finns inte");
-                    }
-                    else{
-                        memberRegistry.delete(memberD);
-                        System.out.println("Medlemmen " + memberD + " borttagen");
-                    }
-                    break;
                 case 5:
                     rentalService.cars();
                     break;
@@ -163,21 +82,19 @@ public class Main extends Application {
                     break;
                  */
     }
-    Scene scene1, scene2;
 
     @Override
     public void start(Stage stage) throws Exception {
 
-
-
-
+        FileService fileService = new FileService();
         Vehicle vehicle = new Vehicle();
-        Inventory inventory = new Inventory();
-        Member member1 = new Member(1, "Vivianne", "Premium", "Ingen uthyrnings historik");
-        MemberRegistry memberRegistry = new MemberRegistry();
-        memberRegistry.add(member1);
+        ObservableList<Member> members = fileService.readMembers();
+        ObservableList<Vehicle> vehicles = fileService.readVehicles();
+        MemberRegistry memberRegistry = new MemberRegistry(members);
+        Inventory inventory = new Inventory(vehicles);
         MembershipService membershipService = new MembershipService(memberRegistry);
         RentalService rentalService = new RentalService(inventory);
+        AlertBox alertBox = new AlertBox(membershipService);
 
 
         stage.setTitle("Vivis Biluthyrning");
@@ -187,40 +104,56 @@ public class Main extends Application {
         headLabel.getStyleClass().add("label-green");
         Scene scene1 = new Scene(borderPane, 700, 700);
 
+        Label writerLabel = new Label("----------------------\nFilinläsning:\n");
+        Button writerButton = new Button("Läs in medlemmar från fil");
         TextField writerText = new TextField();
-        membershipService.readFile(memberRegistry.getMembers().toString());
 
-        //Inventory o memberRegistry läsas in från fil o populera aktuell tabell
-      /*  String rentalFile = "data.txt";
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(rentalFile))) {
-            writer.write(memberRegistry.getMembers().toString());
-            writerText.setText("Filen har sparats " + rentalFile);
-        }
-        catch (IOException eFile) {
-            writerText.setText("Gick inte att spara");
-        }
-        try (BufferedReader reader = new BufferedReader(new FileReader(rentalFile))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                writerText.setText(line);
-            }
-        }
-        catch (IOException eFile) {
-            writerText.setText("Fel vid utskrift");
-        } */
+        TableView<Vehicle> vehicleTable = new TableView<>();
+        TableColumn<Vehicle, String> brandColumn = new TableColumn("Märke");
+        brandColumn.setMinWidth(200);
+        brandColumn.setCellValueFactory(new PropertyValueFactory<>("brand"));
+        vehicleTable.setItems(inventory.getVehicleList());
+        TextField brandInput = new TextField();
+        brandInput.setPromptText("Märke");
+        brandInput.setMinWidth(200);
 
-        //TableView
+        TableColumn<Vehicle, String> modelColumn = new TableColumn<>("Modell");
+        modelColumn.setMinWidth(200);
+        modelColumn.setCellValueFactory(new PropertyValueFactory<>("model"));
+        TextField modelInput = new TextField("Modell");
+        modelInput.setPromptText("Modell");
+        modelInput.setMinWidth(200);
+
+        TableColumn<Vehicle, Boolean> loanableColumn = new TableColumn<>("Tillgänglig");
+        loanableColumn.setMinWidth(200);
+        loanableColumn.setCellValueFactory(new PropertyValueFactory<>("loanable"));
+        TextField loanableInput = new TextField();
+        loanableInput.setPromptText("Tillgänglig");
+        loanableInput.setMinWidth(200);
+
+        TableColumn<Vehicle, String> batteryColumn = new TableColumn<>("Batteri");
+        batteryColumn.setMinWidth(200);
+        batteryColumn.setCellValueFactory(new PropertyValueFactory<>("batterylevel"));
+        TextField batteryInput = new TextField();
+        batteryInput.setPromptText("Batteri");
+        batteryInput.setMinWidth(200);
+
+        vehicleTable.setItems(inventory.getVehicleList());
+        vehicleTable.getColumns().addAll(brandColumn, modelColumn, loanableColumn, batteryColumn);
+
+        //TableView medlemmar
         TableView<Member> table;
         TableColumn<Member, Integer> idColumn = new TableColumn<>("Id");
         idColumn.setMinWidth(100);
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         table = new TableView<>();
         table.setItems(membershipService.getMembers());
+
         TextField idInput = new TextField();
         idInput.setPromptText("ID");
         idInput.setMinWidth(100);
 
-        TableColumn<Member, String> nameColumn = new TableColumn<>("Name");
+        TableColumn<Member, String> nameColumn = new TableColumn<>("Namn");
         nameColumn.setMinWidth(150);
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         TextField nameInput = new TextField();
@@ -234,18 +167,21 @@ public class Main extends Application {
         statusInput.setPromptText("Status");
         statusInput.setMinWidth(100);
 
-        TableColumn<Member, String> historyColumn = new TableColumn<>("History");
+        TableColumn<Member, String> historyColumn = new TableColumn<>("Historik");
         historyColumn.setMinWidth(200);
         historyColumn.setCellValueFactory(new PropertyValueFactory<>("history"));
         TextField historyInput = new TextField();
         historyInput.setPromptText("Historik");
         historyInput.setMinWidth(200);
 
-        TableColumn<Button, String> returnColumn = new TableColumn<>("Återgå till huvudmeny");
-        returnColumn.setMinWidth(200);
-        returnColumn.setCellValueFactory(new PropertyValueFactory<>("return"));
+//        TableColumn<Button, String> returnColumn = new TableColumn<>("Återgå till huvudmeny");
+//        returnColumn.setMinWidth(200);
+//        returnColumn.setCellValueFactory(new PropertyValueFactory<>("return"));
         Button returnScene = new Button("Gå tillbaka till huvudmenyn");
         returnScene.setMinWidth(100);
+        Button returnScene2 = new Button("Gå tillbaka till huvudmenyn");
+        returnScene2.setMinWidth(100);
+
 
         table.getColumns().addAll(idColumn, nameColumn, statusColumn, historyColumn);
 
@@ -264,12 +200,25 @@ public class Main extends Application {
         VBox vBox3 = new VBox();
         vBox3.setPadding(new Insets(10, 10, 10, 10));
         vBox3.setSpacing(10);
-        Scene scene3 = new Scene(vBox3, 500, 500);
+
 
         VBox vBox2 = new VBox();
         vBox2.setPadding(new Insets(10, 10, 10, 10));
         vBox2.setSpacing(10);
 
+        VBox vBox4 = new VBox();
+        vBox4.setPadding(new Insets(10, 10, 10, 10));
+        vBox4.setSpacing(10);
+
+        //Vbox5 till bilarna
+        VBox vBox5 = new VBox();
+        vBox5.setPadding(new Insets(10, 10, 10, 10));
+        vBox5.setSpacing(10);
+        Scene scene3 = new Scene(vBox5, 500, 500);
+
+        HBox hBox3 = new HBox();
+        hBox3.setPadding(new Insets(10, 10, 10, 10));
+        hBox3.setSpacing(10);
 
 
         //Button
@@ -277,14 +226,19 @@ public class Main extends Application {
             stage.setScene(scene1);
         });
 
+        returnScene2.setOnAction(e -> {
+            stage.setScene(scene1);
+        });
+
         Menu memberMenu = new Menu("Medlemmar");
-        MenuItem addMemberM = new MenuItem("Lägg till ny/radera medlem...");
-        MenuItem searchMemberM = new MenuItem("Sök på medlemmar...");
-        MenuItem changeMemberM = new MenuItem("Ändra på medlemmar...");
+        MenuItem addMemberM = new MenuItem("Hantera medlemmar...");
+        MenuItem searchMemberM = new MenuItem("Sök upp information om medlem");
+
         Menu carMenu = new Menu("Bilar");
-        carMenu.getItems().add(new MenuItem("Sök/lista bilar..."));
-        carMenu.getItems().add(new MenuItem("Boka en bil..."));
-        carMenu.getItems().add(new MenuItem("Avsluta en uthyrning..."));
+        MenuItem listCarMenu = new MenuItem("Sök/lista bilar...");
+        MenuItem bookCarMenu = new MenuItem("Boka en bil...");
+        MenuItem terminateRental = new MenuItem("Avsluta en uthyrning...");
+
         Menu revenueMenu = new Menu("Intäkter");
         MenuItem revenue = new MenuItem("Summera intäkter...");
         revenueMenu.getItems().add(revenue);
@@ -292,7 +246,6 @@ public class Main extends Application {
         Label idLabel = new Label();
         TextField idText = new TextField();
         idText.setPromptText("ID");
-        TextField search = new TextField();
         Button searchMButton = new Button("Sök");
         Label saveLabel = new Label();
 
@@ -306,24 +259,21 @@ public class Main extends Application {
         statusText.setPromptText("Standard eller Premium");
         Label addM = new Label();
 
-        Label writerLabel = new Label("----------------------\nFilinläsning:\n");
-        Button writerButton = new Button("Läs in från fil");
         Button addButton = new Button("Spara medlem");
         Button deleteButton = new Button("Radera medlem");
+        Button deleteAlertB = new Button();
         Button changeMButton = new Button("Ändra medlem");
         Label changeLabel = new Label("Vilken medlem vill du ändra på?");
-        Label changeNameL = new Label("Namn:");
         TextField changeName = new TextField();
         changeName.setPromptText("Namn");
-        Label changeStatusL = new Label("Status:");
         TextField changeStatus = new TextField();
         changeStatus.setPromptText("Standard eller Premium");
-        Label changeHistoryL = new Label("Historik:");
         TextField changeHistory = new TextField();
         changeHistory.setPromptText("Historik");
 
         Label deleteL = new Label("Vilken medlem vill du radera?");
         TextField deleteT = new TextField();
+
 
         addMemberM.setOnAction(e -> {
             stage.setScene(scene2);
@@ -351,19 +301,15 @@ public class Main extends Application {
             statusText.clear();
             historyInput.clear();
         });
+
         deleteButton.setOnAction(e -> {
-            deleteL.getText();
-            deleteT.getText();
-            Member memberD = membershipService.searchMemberList(deleteT.getText());
-            membershipService.searchResult(memberD);
-            memberRegistry.delete(memberD);
-            deleteL.setText("Medlemmen raderad");
+            Member memberDel = membershipService.searchMemberList(deleteT.getText());
+            membershipService.delMember(memberDel);
+            alertBox.display("Radera medlem", "Medlem raderad", memberDel);
         });
 
         writerButton.setOnAction(e -> {
-        String s = membershipService.readFile(memberRegistry.getMembers().toString());
-            writerText.setText(s);
-
+        table.refresh();
         });
 
         searchMemberM.setOnAction(e -> {
@@ -374,7 +320,6 @@ public class Main extends Application {
         });
         searchMButton.setOnAction(e -> {
             Member searchedMember = membershipService.searchMemberList(addNameText.getText());
-            System.out.println(searchedMember);
             if(searchedMember == null){
                 String s = "Medlemmen finns inte";
                 saveLabel.setText(s);
@@ -382,27 +327,23 @@ public class Main extends Application {
                 String found = "Hittat medlemmen: " + searchedMember.getId() + ", "+ searchedMember.getName() + ", "
                         + searchedMember.getStatus() + ", " + searchedMember.getHistory();
                 saveLabel.setText(found);
+                addNameText.clear();
             }
         });
 
-        System.out.println("Vad vill du ändra på medlemmen?");
-        System.out.println("Skriv in [namn], [status] eller [historik] på det du vill ändra");
-
-        changeMemberM.setOnAction(e -> {
-            borderPane.setCenter(vBox2);
-            changeLabel.getText();
+        changeMButton.setOnAction(e -> {
+            Member member = new Member();
+            int valdRad = table.getSelectionModel().getSelectedCells().get(0).getRow();
+            member = table.getItems().get(valdRad);
+            alertBox.change("Ändra medlem", "Fyll i ändringar på medlem", member, idInput, nameInput, changeStatus, changeHistory, table);
+            idInput.getText();
             nameInput.getText();
-            changeName.getText();
             changeStatus.getText();
             changeHistory.getText();
-            Member m =  membershipService.searchMemberList(addNameText.getText());
-        } );
+        });
 
-        changeMButton.setOnAction(e -> {
-            //anropa ändringen av member i kod
-            // Member m = membershipService.changeSwitch(nameInput.getText());
-            nameInput.clear();
-
+        listCarMenu.setOnAction(e -> {
+            stage.setScene(scene3);
         });
         Button revenueButton = new Button("Visa intäkter");
         revenue.setOnAction(e -> {
@@ -410,31 +351,10 @@ public class Main extends Application {
         });
         revenueButton.setOnAction(e -> {rentalService.sum();});
 
-        //göra en ny knapp som säger Sök och sen ha funktionalitet till metoden i den
-        //göra nåt med informationen, spara informationen
-
-       /* addMemLabel.setText("Ange uppgifter för en ny medlem, ange siffra för id först");
-        addMemText.getText();
-        addMemText.setPromptText("ID");
-                Member member3 = new Member();
-                System.out.println("Ange uppgifter för en ny medlem, ange siffra för id först");
-                try{member3.setId(input.nextInt()); }
-                catch(InputMismatchException e3){
-                    System.out.println("Ange en siffra");
-                    input.nextLine();
-                }
-                input.nextLine();
-                System.out.println("Skriv in namnet");
-                member3.setName(input.nextLine());
-                System.out.println("Skriv in statusen antingen Standard eller Premium");
-                member3.setStatus(input.nextLine());
-                memberRegistry.add(member3);
-                System.out.println("Du har nu lagt till medlemmen " + member3.getName());});
-*/
-
         MenuBar menuBar = new MenuBar();
         menuBar.getMenus().addAll(memberMenu, carMenu, revenueMenu);
-        memberMenu.getItems().addAll(addMemberM, searchMemberM, changeMemberM);
+        memberMenu.getItems().addAll(addMemberM, searchMemberM);
+        carMenu.getItems().addAll(listCarMenu, bookCarMenu, terminateRental);
 
         borderPane.setCenter(headLabel);
         borderPane.setTop(menuBar);
@@ -443,15 +363,20 @@ public class Main extends Application {
         hbox.getChildren().addAll(idInput, nameInput, statusInput, historyInput);
 
         //Lägga till/ta bort medlemmar/lista tabell
-        hBox2.getChildren().addAll(nameInput, idText, statusText, historyInput, addButton);
-        vbox1.getChildren().addAll(table, returnScene, idLabel, hBox2, searchMButton, saveLabel
-                , addM, deleteL, deleteT, deleteButton, writerLabel, writerButton, writerText);
+        hBox2.getChildren().addAll(idText, nameInput, statusText, historyInput, addButton);
+
+        vbox1.getChildren().addAll(writerLabel, writerButton, writerText, table, returnScene
+                , idLabel, hBox2, searchMButton, saveLabel, addM, changeLabel, changeMButton, deleteL, deleteT, deleteButton);
 
         //sökningen medlemmar
         vBox3.getChildren().addAll(addNameLabel, addNameText, searchMButton, saveLabel);
         //Ändra medlem
-        vBox2.getChildren().addAll(changeLabel, changeNameL, changeName, changeStatusL
-                , changeStatus, changeHistoryL, changeHistory, changeMButton);
+//        vBox2.getChildren().addAll(changeLabel, changeNameL, changeName, changeStatusL
+//                , changeStatus, changeHistoryL, changeHistory, changeMButton);
+
+        //Bilars lista, meny
+        hBox3.getChildren().addAll(brandInput, modelInput, loanableInput, batteryInput);
+        vBox5.getChildren().addAll(returnScene2, vehicleTable);
 
         borderPane.getChildren().addAll();
 
@@ -461,8 +386,16 @@ public class Main extends Application {
 
 
     }
-    //kopiera innehållet till observableList, lyssna på bil på förändringar, när nåt förändras
-    //arraylist funkar inte så
-    //lägger in startdata i observablelist
 
+    private Inventory getInventory() {
+        Inventory inventory = new Inventory();
+
+        inventory.addVehicle(new FamilyCar("VW", "Passat", true, "5", "Manuell", true));
+        inventory.addVehicle(new ElectricCar("BMW", "z4", true,"5", "95"));
+        inventory.addVehicle(new ElectricCar("Tesla", "X", true, "5", "98"));
+        inventory.addVehicle(new CityCar("Mini","Mini Cooper",true, "röd","3"));
+        inventory.addVehicle(new CityCar("VW", "Up!", true, "Vit", "3"));
+        inventory.addVehicle(new FamilyCar("Volvo", "V90", true, "5","Automat", true));
+        return inventory;
+    }
 }

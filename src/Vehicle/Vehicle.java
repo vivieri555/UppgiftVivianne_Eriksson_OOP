@@ -10,6 +10,7 @@ public class Vehicle extends Item{
         this.model = model;
         this.loanable = loanable;
     }
+    public Vehicle(String brand, String model, boolean loanable, String vehicleType, String hasRearCamera, String gearbox){}
     public String getBrand(){
         return brand;
     }

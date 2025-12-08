@@ -1,5 +1,8 @@
 package Rental;
 import Vehicle.Vehicle;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 import Vehicle.*;
@@ -129,5 +132,4 @@ public class RentalService implements PricePolicy{
             }
         }
     }
-
 }
