@@ -7,7 +7,8 @@ public class Car extends Vehicle{
     private String hasRearCamera;
     private String gearbox;
     public Car() {}
-    public Car(String vehicleType, String hasRearCamera, String gearbox) {
+    public Car(String brand, String model, Boolean loanable, String vehicleType, String hasRearCamera, String gearbox) {
+        super(brand, model, loanable);
         this.vehicleType = vehicleType;
         this.hasRearCamera = hasRearCamera;
         this.gearbox = gearbox;

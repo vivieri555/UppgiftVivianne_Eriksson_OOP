@@ -92,6 +92,7 @@ public class Main extends Application {
         ObservableList<Vehicle> vehicles = fileService.readVehicles();
         MemberRegistry memberRegistry = new MemberRegistry(members);
         Inventory inventory = new Inventory(vehicles);
+        getInventory();
         MembershipService membershipService = new MembershipService(memberRegistry);
         RentalService rentalService = new RentalService(inventory);
         AlertBox alertBox = new AlertBox(membershipService);
@@ -103,10 +104,6 @@ public class Main extends Application {
         Label headLabel = new Label("\tVälkommen\n till Vivis biluthyrning!");
         headLabel.getStyleClass().add("label-green");
         Scene scene1 = new Scene(borderPane, 700, 700);
-
-        Label writerLabel = new Label("----------------------\nFilinläsning:\n");
-        Button writerButton = new Button("Läs in medlemmar från fil");
-        TextField writerText = new TextField();
 
         TableView<Vehicle> vehicleTable = new TableView<>();
         TableColumn<Vehicle, String> brandColumn = new TableColumn("Märke");
@@ -174,9 +171,7 @@ public class Main extends Application {
         historyInput.setPromptText("Historik");
         historyInput.setMinWidth(200);
 
-//        TableColumn<Button, String> returnColumn = new TableColumn<>("Återgå till huvudmeny");
-//        returnColumn.setMinWidth(200);
-//        returnColumn.setCellValueFactory(new PropertyValueFactory<>("return"));
+
         Button returnScene = new Button("Gå tillbaka till huvudmenyn");
         returnScene.setMinWidth(100);
         Button returnScene2 = new Button("Gå tillbaka till huvudmenyn");
@@ -243,6 +238,10 @@ public class Main extends Application {
         MenuItem revenue = new MenuItem("Summera intäkter...");
         revenueMenu.getItems().add(revenue);
 
+        Label writerLabel = new Label("----------------------\nFilinläsning:\n");
+        Button writerButton = new Button("Läs in medlemmar från fil");
+        TextField writerText = new TextField();
+
         Label idLabel = new Label();
         TextField idText = new TextField();
         idText.setPromptText("ID");
@@ -253,15 +252,12 @@ public class Main extends Application {
         TextField addNameText = new TextField();
         addNameText.setPromptText("Namn");
         TextField addName = new TextField();
-
         Label statusLabel = new Label();
         TextField statusText = new TextField();
         statusText.setPromptText("Standard eller Premium");
         Label addM = new Label();
-
         Button addButton = new Button("Spara medlem");
         Button deleteButton = new Button("Radera medlem");
-        Button deleteAlertB = new Button();
         Button changeMButton = new Button("Ändra medlem");
         Label changeLabel = new Label("Vilken medlem vill du ändra på?");
         TextField changeName = new TextField();
@@ -270,10 +266,20 @@ public class Main extends Application {
         changeStatus.setPromptText("Standard eller Premium");
         TextField changeHistory = new TextField();
         changeHistory.setPromptText("Historik");
-
         Label deleteL = new Label("Vilken medlem vill du radera?");
         TextField deleteT = new TextField();
 
+        //Knappar för Vehicle
+        Button saveVButton = new Button("Spara fordon");
+        Button deleteVButton = new Button("Radera fordon");
+        Button changeVButton = new Button("Ändra fordon");
+
+        //Label fordon
+
+        //knappar buttons fordon
+        saveVButton.setOnAction(e -> {});
+        deleteVButton.setOnAction(e -> {});
+        changeVButton.setOnAction(e -> {});
 
         addMemberM.setOnAction(e -> {
             stage.setScene(scene2);
@@ -390,12 +396,11 @@ public class Main extends Application {
     private Inventory getInventory() {
         Inventory inventory = new Inventory();
 
-        inventory.addVehicle(new FamilyCar("VW", "Passat", true, "5", "Manuell", true));
-        inventory.addVehicle(new ElectricCar("BMW", "z4", true,"5", "95"));
-        inventory.addVehicle(new ElectricCar("Tesla", "X", true, "5", "98"));
-        inventory.addVehicle(new CityCar("Mini","Mini Cooper",true, "röd","3"));
-        inventory.addVehicle(new CityCar("VW", "Up!", true, "Vit", "3"));
-        inventory.addVehicle(new FamilyCar("Volvo", "V90", true, "5","Automat", true));
+        inventory.addVehicle(new Car("BMW", "z4", true, "Elektrisk bil", "Ja", "Automat"));
+        inventory.addVehicle(new Car("Volvo", "v90", true, "Familjebil", "Ja", "Automat"));
+        inventory.addVehicle(new Car("Tesla", "Model X", true, "Elektrisk bil", "Ja", "Automat"));
+        inventory.addVehicle(new Bike("Kawasaki", "i3", true, "7-växlar", "Finns cykelkorg"));
+        inventory.addVehicle(new Bike("Turbo", "v8", true, "5-växlar", "Ingen cykelkorg"));
         return inventory;
     }
 }
