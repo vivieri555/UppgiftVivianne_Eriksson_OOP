@@ -106,6 +106,7 @@ public class Main extends Application {
         Scene scene1 = new Scene(borderPane, 700, 700);
 
         TableView<Vehicle> vehicleTable = new TableView<>();
+
         TableColumn<Vehicle, String> brandColumn = new TableColumn("Märke");
         brandColumn.setMinWidth(200);
         brandColumn.setCellValueFactory(new PropertyValueFactory<>("brand"));
@@ -135,15 +136,32 @@ public class Main extends Application {
         batteryInput.setPromptText("Batteri");
         batteryInput.setMinWidth(200);
 
+        TableColumn<Vehicle, String> vehicleTypeColumn = new TableColumn<>("Fordonstyp");
+        vehicleTypeColumn.setMinWidth(200);
+        vehicleTypeColumn.setCellValueFactory(new PropertyValueFactory<>("vehicleType"));
+        TextField vehicleTypeInput = new TextField();
+        vehicleTypeInput.setMinWidth(100);
+
+        TableColumn<Vehicle, String> hasRearCameraColumn = new TableColumn<>("Har backkamera");
+        hasRearCameraColumn.setMinWidth(200);
+        hasRearCameraColumn.setCellValueFactory(new PropertyValueFactory<>("hasRearCamera"));
+        TextField hasRearCameraInput = new TextField();
+        hasRearCameraInput.setMinWidth(200);
+
+        TableColumn<Vehicle, String> gearboxColumn = new TableColumn<>("Gearbox");
+        gearboxColumn.setMinWidth(100);
+        gearboxColumn.setCellValueFactory(new PropertyValueFactory<>("gearbox"));
+        TextField gearboxInput = new TextField();
+        gearboxInput.setMinWidth(100);
+
         vehicleTable.setItems(inventory.getVehicleList());
-        vehicleTable.getColumns().addAll(brandColumn, modelColumn, loanableColumn, batteryColumn);
+        vehicleTable.getColumns().addAll(brandColumn, modelColumn, loanableColumn, batteryColumn, vehicleTypeColumn, hasRearCameraColumn, gearboxColumn);
 
         //TableView medlemmar
-        TableView<Member> table;
+        TableView<Member> table = new TableView<>();
         TableColumn<Member, Integer> idColumn = new TableColumn<>("Id");
         idColumn.setMinWidth(100);
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        table = new TableView<>();
         table.setItems(membershipService.getMembers());
 
         TextField idInput = new TextField();
@@ -209,7 +227,7 @@ public class Main extends Application {
         VBox vBox5 = new VBox();
         vBox5.setPadding(new Insets(10, 10, 10, 10));
         vBox5.setSpacing(10);
-        Scene scene3 = new Scene(vBox5, 500, 500);
+        Scene scene3 = new Scene(vBox5, 1000, 1000);
 
         HBox hBox3 = new HBox();
         hBox3.setPadding(new Insets(10, 10, 10, 10));
