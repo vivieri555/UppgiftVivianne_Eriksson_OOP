@@ -1,5 +1,7 @@
 package Vehicle;
 
+import javafx.scene.control.TextField;
+
 public class Bike extends Vehicle{
     private String gears;
     private String basket;
@@ -20,5 +22,11 @@ public class Bike extends Vehicle{
     }
     public void setBasket(String basket) {
         this.basket = basket;
+    }
+    @Override
+    public void start() {
+        super.start();
+        TextField startText = new TextField();
+        startText.setText("Trampa med fötterna för att rulla");
     }
 }

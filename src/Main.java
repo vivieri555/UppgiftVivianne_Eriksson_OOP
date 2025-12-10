@@ -89,9 +89,10 @@ public class Main extends Application {
         FileService fileService = new FileService();
         Vehicle vehicle = new Vehicle();
         ObservableList<Member> members = fileService.readMembers();
-        ObservableList<Vehicle> vehicles = fileService.readVehicles();
+        //ObservableList<Vehicle> vehicles = fileService.readVehicles();
+        //Inventory inventory = new Inventory(vehicles);
+        Inventory inventory = new Inventory();
         MemberRegistry memberRegistry = new MemberRegistry(members);
-        Inventory inventory = new Inventory(vehicles);
         getInventory();
         MembershipService membershipService = new MembershipService(memberRegistry);
         RentalService rentalService = new RentalService(inventory);
@@ -123,18 +124,11 @@ public class Main extends Application {
         modelInput.setMinWidth(200);
 
         TableColumn<Vehicle, Boolean> loanableColumn = new TableColumn<>("Tillgänglig");
-        loanableColumn.setMinWidth(200);
+        loanableColumn.setMinWidth(50);
         loanableColumn.setCellValueFactory(new PropertyValueFactory<>("loanable"));
         TextField loanableInput = new TextField();
         loanableInput.setPromptText("Tillgänglig");
-        loanableInput.setMinWidth(200);
-
-        TableColumn<Vehicle, String> batteryColumn = new TableColumn<>("Batteri");
-        batteryColumn.setMinWidth(200);
-        batteryColumn.setCellValueFactory(new PropertyValueFactory<>("batterylevel"));
-        TextField batteryInput = new TextField();
-        batteryInput.setPromptText("Batteri");
-        batteryInput.setMinWidth(200);
+        loanableInput.setMinWidth(50);
 
         TableColumn<Vehicle, String> vehicleTypeColumn = new TableColumn<>("Fordonstyp");
         vehicleTypeColumn.setMinWidth(200);
@@ -143,19 +137,31 @@ public class Main extends Application {
         vehicleTypeInput.setMinWidth(100);
 
         TableColumn<Vehicle, String> hasRearCameraColumn = new TableColumn<>("Har backkamera");
-        hasRearCameraColumn.setMinWidth(200);
+        hasRearCameraColumn.setMinWidth(50);
         hasRearCameraColumn.setCellValueFactory(new PropertyValueFactory<>("hasRearCamera"));
         TextField hasRearCameraInput = new TextField();
-        hasRearCameraInput.setMinWidth(200);
+        hasRearCameraInput.setMinWidth(50);
 
-        TableColumn<Vehicle, String> gearboxColumn = new TableColumn<>("Gearbox");
+        TableColumn<Vehicle, String> gearboxColumn = new TableColumn<>("Växellåda");
         gearboxColumn.setMinWidth(100);
         gearboxColumn.setCellValueFactory(new PropertyValueFactory<>("gearbox"));
         TextField gearboxInput = new TextField();
         gearboxInput.setMinWidth(100);
 
+        TableColumn<Vehicle, String> gearsColumn = new TableColumn<>("Antal växlar");
+        gearsColumn.setMinWidth(200);
+        gearsColumn.setCellValueFactory(new PropertyValueFactory<>("gears"));
+        TextField batteryInput = new TextField();
+        batteryInput.setMinWidth(200);
+
+        TableColumn<Vehicle, String> basketColumn = new TableColumn<>("Cykelkorg");
+        basketColumn.setMinWidth(50);
+        basketColumn.setCellValueFactory(new PropertyValueFactory<>("basket"));
+        TextField basketInput = new TextField();
+        basketInput.setMinWidth(50);
+
         vehicleTable.setItems(inventory.getVehicleList());
-        vehicleTable.getColumns().addAll(brandColumn, modelColumn, loanableColumn, batteryColumn, vehicleTypeColumn, hasRearCameraColumn, gearboxColumn);
+        vehicleTable.getColumns().addAll(brandColumn, modelColumn, loanableColumn, vehicleTypeColumn, hasRearCameraColumn, gearboxColumn, gearsColumn, basketColumn);
 
         //TableView medlemmar
         TableView<Member> table = new TableView<>();
@@ -310,9 +316,7 @@ public class Main extends Application {
         addButton.setOnAction(e -> {
             Member member3 = new Member();
             saveLabel.setText(String.valueOf(membershipService.addId(idText, member3)));
-           // System.out.println(membershipService.addId(idText, member3));
-        //Lägga in Label "inte giligt nummer"
-            //smäller på integerparse, göra om från boolean elr ny metod som kan skriva ut int variebel
+
             member3.setId(Integer.parseInt(idText.getText()));
             member3.setName(nameInput.getText());
             member3.setStatus(statusText.getText());

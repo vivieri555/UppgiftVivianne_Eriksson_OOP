@@ -14,7 +14,7 @@ public class FileService {
     MemberRegistry memberRegistry = new MemberRegistry();
     TextField writerText = new TextField();
     String memberFile = "members.csv";
-    String vehicleFile = "vehicles.csv";
+    String vehicleFile = "Vehicle.csv";
 
     public ObservableList<Member> readMembers () {
         //Inventory o memberRegistry läsas in från fil o populera aktuell tabell
@@ -51,7 +51,7 @@ public class FileService {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] values = line.split(",");
-                Vehicle vehicle = new Vehicle(values[0],values[1],Boolean.parseBoolean(values[2]),values[3],values[4],values[5]);
+                Vehicle vehicle = new Vehicle(values[0],values[1],Boolean.parseBoolean(values[2]),values[3],values[4],values[5],values[6],values[7]);
                 vehicles.add(vehicle);
             }
         }
