@@ -31,7 +31,6 @@ public class MembershipService{
         member.setHistory(input.nextLine());
     }
             public int addId(TextField addMemText, Member member3) {
-               // int id = Integer.parseInt(addMemText.getText());
                 int id = 0;
                 try {
                   id = Integer.parseInt(addMemText.getText());

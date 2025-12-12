@@ -28,8 +28,8 @@ public class Car extends Vehicle{
     public String getGearbox() {
         return gearbox;
     }
-    public String setGearbox(String gearbox) {
-       return gearbox;
+    public void setGearbox(String gearbox) {
+       this.gearbox = gearbox;
     }
     @Override
     public void start(){

@@ -15,7 +15,8 @@
 .button {
     -fx-background-color: #FFFFFF;
     -fx-text-fill: #808000;
-    -fx-stroke: #9400D3;
+    -fx-stroke: #8B008B;
+    -fx-stroke-width: 10;
 }
 .menu-item {
     -fx-background-color: #808000;

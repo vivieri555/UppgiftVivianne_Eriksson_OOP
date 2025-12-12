@@ -29,7 +29,7 @@ public class AlertBox {
 
     public AlertBox(MembershipService membershipService) {this.membershipService = membershipService;}
 
-    public void display (String title, String message, Member member) {
+    public void display (String title, String message) {
         Stage stage2 = new Stage();
         stage2.setTitle(title);
         stage2.initModality(Modality.APPLICATION_MODAL);
@@ -58,13 +58,6 @@ public class AlertBox {
         nameInput.setText(member.getName());
         changeStatus.setText(member.getStatus());
         changeHistory.setText(member.getHistory());
-
-//        member.setId(membershipService.addId(idInput, member));
-//        member.setName(nameInput.getText());
-//        member.setStatus(changeStatus.getText());
-//        member.setHistory(changeHistory.getText());
-
-
 
         closeButton.setOnAction(e -> {
             membershipService.change(member, idInput, nameInput, changeStatus, changeHistory);
