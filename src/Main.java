@@ -2,6 +2,7 @@ import Exceptions.AlertBox;
 import Exceptions.AlertVehicle;
 import MemberPackage.*;
 import Rental.Inventory;
+import Rental.Rental;
 import Rental.RentalService;
 import Vehicle.*;
 import javafx.application.Application;
@@ -25,9 +26,7 @@ public class Main extends Application {
 //            System.out.println("Tryck 6 för att boka en bil");
 //            System.out.println("Tryck 7 för att avsluta en uthyrning av bil");
 //            System.out.println("Tryck 8 för att summera intäkter");
-                case 5:
-                    rentalService.cars();
-                    break;
+
                 case 6:
                     Rental rental = new Rental();
                     input.nextLine();
@@ -320,7 +319,6 @@ public class Main extends Application {
         gearsText.setPromptText("Antal växlar");
         TextField basketText = new TextField();
         basketText.setPromptText("Finns korg");
-        Label deleteVehicle = new Label();
 
         //knappar buttons fordon
         listCarMenu.setOnAction(e -> {
@@ -352,6 +350,11 @@ public class Main extends Application {
             hasRearCameraInput.getText();
             gearboxInput.getText();
         });
+
+        bookCarMenu.setOnAction(e -> {
+            Rental rental = new Rental();
+        });
+
 
         addMemberM.setOnAction(e -> {
             stage.setScene(scene2);
