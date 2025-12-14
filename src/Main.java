@@ -279,7 +279,8 @@ public class Main extends Application {
         Label statusLabel = new Label();
         TextField statusText = new TextField();
         statusText.setPromptText("Standard eller Premium");
-        Label addM = new Label();
+        Label addMLabel = new Label();
+
         Button addButton = new Button("Spara medlem");
         Button deleteButton = new Button("Radera medlem");
         Button changeMButton = new Button("Ändra medlem");
@@ -324,8 +325,6 @@ public class Main extends Application {
         listCarMenu.setOnAction(e -> {
         });
 
-        //Kan jag inte spara till olika antal parametrar för bike, car?
-        //säkert inte
         saveBikeB.setOnAction(e -> {alertVehicle.addBike(bike, brandText,
                 modelText, loanableText, gearsText, basketText);});
 
@@ -360,7 +359,7 @@ public class Main extends Application {
             stage.setScene(scene2);
             idLabel.setText("Ange uppgifter för en ny medlem:");
             idText.getText();
-            nameInput.getText();
+            addNameText.getText();
             statusLabel.setText(statusText.getText());
 
         });
@@ -369,14 +368,14 @@ public class Main extends Application {
             saveLabel.setText(String.valueOf(membershipService.addId(idText, member3)));
 
             member3.setId(Integer.parseInt(idText.getText()));
-            member3.setName(nameInput.getText());
+            member3.setName(addNameText.getText());
             member3.setStatus(statusText.getText());
             member3.setHistory(historyInput.getText());
             memberRegistry.add(member3);
-            String added = "Du har nu lagt till medlem " + idText.getText() + ", "+ nameInput.getText() +", " +statusText.getText();
-            addM.setText(added);
+            String added = "Du har nu lagt till medlem " + idText.getText() + ", "+ addNameText.getText() +", " +statusText.getText();
+            addMLabel.setText(added);
             idText.clear();
-            nameInput.clear();
+            addNameText.clear();
             statusText.clear();
             historyInput.clear();
         });
@@ -388,17 +387,16 @@ public class Main extends Application {
         });
 
         writerButton.setOnAction(e -> {
-        table.refresh();
+        fileService.writeFile();
         });
 
         searchMemberM.setOnAction(e -> {
             borderPane.setCenter(vBox3);
             addNameLabel.setText("Skriv in namnet på medlem du vill söka efter:");
-            String s = addNameText.getText();
-            System.out.println(s);
+            String s = addName.getText();
         });
         searchMButton.setOnAction(e -> {
-            Member searchedMember = membershipService.searchMemberList(addNameText.getText());
+            Member searchedMember = membershipService.searchMemberList(addName.getText());
             if(searchedMember == null){
                 String s = "Medlemmen finns inte";
                 saveLabel.setText(s);
@@ -406,18 +404,18 @@ public class Main extends Application {
                 String found = "Hittat medlemmen: " + searchedMember.getId() + ", "+ searchedMember.getName() + ", "
                         + searchedMember.getStatus() + ", " + searchedMember.getHistory();
                 saveLabel.setText(found);
-                addNameText.clear();
+                addName.clear();
             }
         });
-            //disable knappen från början
+            //disable knappen från början kankse?
         changeMButton.setOnAction(e -> {
             Member member;
             int valdRad = table.getSelectionModel().getSelectedCells().get(0).getRow();
             member = table.getItems().get(valdRad);
             alertBox.change("Ändra medlem", "Fyll i ändringar på medlem", member,
-                    idInput, nameInput, changeStatus, changeHistory, table);
+                    idInput, addName, changeStatus, changeHistory, table);
             idInput.getText();
-            nameInput.getText();
+            addName.getText();
             changeStatus.getText();
             changeHistory.getText();
         });
@@ -443,14 +441,14 @@ public class Main extends Application {
         hbox.getChildren().addAll(idInput, nameInput, statusInput, historyInput);
 
         //Lägga till/ta bort medlemmar/lista tabell
-        hBox2.getChildren().addAll(idText, nameInput, statusText, historyInput, addButton);
+        hBox2.getChildren().addAll(idText, addNameText, statusText, historyInput, addButton);
 
         vbox1.getChildren().addAll(writerLabel, writerButton, writerText, table, returnScene
-                , idLabel, hBox2, searchMButton, saveLabel, addM,
+                , idLabel, hBox2, searchMButton, saveLabel, addMLabel,
                 changeLabel, changeMButton, deleteL, deleteT, deleteButton);
 
         //sökningen medlemmar
-        vBox3.getChildren().addAll(addNameLabel, addNameText, searchMButton, saveLabel);
+        vBox3.getChildren().addAll(addNameLabel, addName, searchMButton, saveLabel);
         //Ändra medlem
 //        vBox2.getChildren().addAll(changeLabel, changeNameL, changeName, changeStatusL
 //                , changeStatus, changeHistoryL, changeHistory, changeMButton);
@@ -467,6 +465,8 @@ public class Main extends Application {
 
         borderPane.getChildren().addAll();
 
+        scene3.getStylesheets().add("MenuColors.css");
+        scene2.getStylesheets().add("MenuColors.css");
         scene1.getStylesheets().add("MenuColors.css");
         stage.setScene(scene1);
         stage.show();

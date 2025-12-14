@@ -3,6 +3,7 @@ package Exceptions;
 import Rental.Inventory;
 import Vehicle.Car;
 import Vehicle.*;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -46,6 +47,9 @@ public class AlertVehicle {
                 stage.close();});
 
         VBox layout = new VBox();
+        layout.setPadding(new Insets(10,10, 10,10));
+        layout.setSpacing(10);
+        layout.setStyle("-fx-background-color: #9400D3;");
         layout.getChildren().addAll(carL, save, brandText, modelText, loanableText,
                 vehicleTypeText, hasRearCameraText, gearboxText);
         layout.setAlignment(Pos.CENTER);
@@ -80,6 +84,9 @@ public class AlertVehicle {
             stage.close();
         });
         VBox layout = new VBox();
+        layout.setPadding(new Insets(10,10, 10,10));
+        layout.setSpacing(10);
+        layout.setStyle("-fx-background-color: #9400D3;");
         layout.getChildren().addAll(bikeL, save, brandText, modelText, loanableText,
                 gearsText, basketText);
         layout.setAlignment(Pos.CENTER);
@@ -110,6 +117,9 @@ public class AlertVehicle {
             vehicleTable.refresh();
             stage2.close(); } );
         VBox layout2 = new VBox();
+        layout2.setPadding(new Insets(10,10, 10,10));
+        layout2.setSpacing(10);
+        layout2.setStyle("-fx-background-color: #9400D3;");
         layout2.getChildren().addAll(message, brandInput, modelInput, loanableInput, vehicleTypeInput, hasRearCameraInput, gearboxInput, changeB);
         layout2.setAlignment(Pos.CENTER);
 

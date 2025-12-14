@@ -2,6 +2,7 @@ package Exceptions;
 
 import MemberPackage.Member;
 import MemberPackage.MembershipService;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -38,6 +39,9 @@ public class AlertBox {
         closeButton.setOnAction(e -> { stage2.close(); } );
 
         VBox layout = new VBox();
+        layout.setPadding(new Insets(10,10, 10,10));
+        layout.setSpacing(10);
+        layout.setStyle("-fx-background-color: #9400D3;");
         layout.getChildren().addAll(label, closeButton);
         layout.setAlignment(Pos.CENTER);
 
@@ -64,6 +68,9 @@ public class AlertBox {
             table.refresh();
             stage3.close(); } );
         VBox layout2 = new VBox();
+        layout2.setPadding(new Insets(10,10, 10,10));
+        layout2.setSpacing(10);
+        layout2.setStyle("-fx-background-color: #9400D3;");
         layout2.getChildren().addAll(label2, idInput, nameInput, changeStatus, changeHistory, closeButton);
         layout2.setAlignment(Pos.CENTER);
 
