@@ -1,5 +1,5 @@
-import Exceptions.AlertBox;
-import Exceptions.AlertVehicle;
+import Alerts.AlertBox;
+import Alerts.AlertVehicle;
 import MemberPackage.*;
 import Rental.Inventory;
 import Rental.Rental;
@@ -263,7 +263,7 @@ public class Main extends Application {
         revenueMenu.getItems().add(revenue);
 
         Label writerLabel = new Label("----------------------\nFilinläsning:\n");
-        Button writerButton = new Button("Läs in medlemmar från fil");
+        Button writerButton = new Button("Uppdatera medlemmar till fil");
         TextField writerText = new TextField();
 
         Label idLabel = new Label();
@@ -276,6 +276,7 @@ public class Main extends Application {
         TextField addNameText = new TextField();
         addNameText.setPromptText("Namn");
         TextField addName = new TextField();
+        addName.setPromptText("Namn");
         Label statusLabel = new Label();
         TextField statusText = new TextField();
         statusText.setPromptText("Standard eller Premium");
@@ -294,14 +295,20 @@ public class Main extends Application {
         Label deleteL = new Label("Vilken medlem vill du radera?");
         TextField deleteT = new TextField();
 
+        TextField searchName = new TextField();
+        searchName.setPromptText("Namn");
+
         //Knappar för Vehicle
         Button saveCarB = new Button("Lägg in ny bil");
         Button deleteVButton = new Button("Radera fordon");
         Button changeCarB = new Button("Ändra fordon");
         Button saveBikeB = new Button("Lägg in ny cykel");
+        Button bookCar = new Button("Boka Bil");
+        Button bookBike = new Button("Boka cykel");
 
         //Label fordon
         Label vehicleLabel = new Label();
+        Label bookCarLabel = new Label("Markera en bil du önskar boka och tryck sen på Boka Bil");
 
         //TextField fordon
         TextField brandText = new TextField();
@@ -320,6 +327,10 @@ public class Main extends Application {
         gearsText.setPromptText("Antal växlar");
         TextField basketText = new TextField();
         basketText.setPromptText("Finns korg");
+        TextField bookingText = new TextField();
+        TextField brandCarText = new TextField();
+        TextField daysText = new TextField();
+        TextField nameBook = new TextField();
 
         //knappar buttons fordon
         listCarMenu.setOnAction(e -> {
@@ -350,10 +361,12 @@ public class Main extends Application {
             gearboxInput.getText();
         });
 
-        bookCarMenu.setOnAction(e -> {
-            Rental rental = new Rental();
+        bookCar.setOnAction(e -> {
+            Vehicle car1;
+            int valdRad = vehicleTable.getSelectionModel().getSelectedCells().get(0).getRow();
+            car1 = vehicleTable.getItems().get(valdRad);
+            alertVehicle.bookCar(car1, vehicleTable, bookingText, brandCarText, daysText);
         });
-
 
         addMemberM.setOnAction(e -> {
             stage.setScene(scene2);
@@ -379,15 +392,14 @@ public class Main extends Application {
             statusText.clear();
             historyInput.clear();
         });
+        writerButton.setOnAction(e -> {
+            fileService.writeFile(members);
+        });
 
         deleteButton.setOnAction(e -> {
             Member memberDel = membershipService.searchMemberList(deleteT.getText());
             membershipService.delMember(memberDel);
             alertBox.display("Radera medlem", "Medlem raderad");
-        });
-
-        writerButton.setOnAction(e -> {
-        fileService.writeFile();
         });
 
         searchMemberM.setOnAction(e -> {
@@ -437,7 +449,7 @@ public class Main extends Application {
         borderPane.setCenter(headLabel);
         borderPane.setTop(menuBar);
 
-        //Översta Hbox i tableView
+        //Översta Hbox i tableView Medlemmar
         hbox.getChildren().addAll(idInput, nameInput, statusInput, historyInput);
 
         //Lägga till/ta bort medlemmar/lista tabell
@@ -453,14 +465,13 @@ public class Main extends Application {
 //        vBox2.getChildren().addAll(changeLabel, changeNameL, changeName, changeStatusL
 //                , changeStatus, changeHistoryL, changeHistory, changeMButton);
 
-        //lägga till fordon
-//        hBox4.getChildren().addAll(brandText, modelText, loanableText, vehicleTypeText,
-//                hasRearCameraText, gearboxText, gearsText, basketText);
+        //boka bil
+       // hBox4.getChildren().addAll(bookCarLabel, bookingText);
 
         //Bilars lista, meny
         hBox3.getChildren().addAll(brandInput, modelInput, loanableInput, vehicleTypeInput,
                 hasRearCameraInput, gearboxInput, gearsInput, basketInput);
-        vBox5.getChildren().addAll(returnScene2, vehicleTable, hBox4,
+        vBox5.getChildren().addAll(returnScene2, bookCarLabel, bookCar, vehicleTable,
                 vehicleLabel, saveCarB, saveBikeB, changeCarB, deleteVButton);
 
         borderPane.getChildren().addAll();

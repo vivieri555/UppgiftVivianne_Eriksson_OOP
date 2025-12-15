@@ -1,4 +1,4 @@
-package Exceptions;
+package Alerts;
 
 import MemberPackage.MemberRegistry;
 import MemberPackage.MembershipService;

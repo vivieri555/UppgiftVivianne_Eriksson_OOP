@@ -16,6 +16,7 @@ public class MembershipService{
 
     //Hämta observablelist  objekt istället för arraylistMembers
     public Member searchMemberList(String searchedMember){
+        System.out.print(searchedMember);
         for(Member member: memberRegistry.getMembers()){
             if(member.getName().contains(searchedMember)){
                 return member;

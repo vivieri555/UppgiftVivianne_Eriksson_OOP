@@ -3,7 +3,7 @@ import MemberPackage.Member;
 import MemberPackage.MembershipService;
 import Vehicle.Vehicle;
 import java.util.ArrayList;
-import Vehicle.*;
+
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
@@ -77,46 +77,35 @@ public class RentalService implements PricePolicy{
             }
         }
     }
-    public void BookCar () {
+    public void BookCar (Member searchedNamed, TextField booking, TextField days,
+                         Label search, Label changeHistory) {
         Rental rental = new Rental();
-        Label nameLabel = new Label("Ange namn på medlem du vill boka bil på?");
-        TextField booking = new TextField();
-        booking.getText();
-        Member searchNamed = membershipService.searchMemberList(booking.getText());
-        if (searchNamed == null) {
-            nameLabel.setText("Medlemmen finns inte");
-        } else {
-            nameLabel.setText("Medlemmen finns " + searchNamed.getName());
-        }
-        rental.setMember(searchNamed);
-        nameLabel.setText("Vilken bil vill du boka? Ange varumärke");
+
+        rental.setMember(searchedNamed);
         booking.clear();
         booking.getText();
 
         Vehicle car1 = searchCar(booking.getText());
         if (car1 == null || !car1.isLoanable()) {
-            nameLabel.setText("Fordonet är inte tillgängligt att låna just nu");
+            search.setText("Fordonet är inte tillgängligt att låna just nu");
         } else {
             car1.setLoanable(false);
             rental.setVehicle(car1);
-            nameLabel.setText("Hur många dagar vill du låna?");
-            booking.clear();
-            booking.getText();
-            rental.setRentalDays(Integer.parseInt(booking.getText()));
+            rental.setRentalDays(Integer.parseInt(days.getText()));
 
             //Varför säger den att den vill ha en INT , men ska va double
-            double amount = cost(Integer.parseInt(String.valueOf(booking.getText())));
-            nameLabel.setText("Kostnaden blir " + cost(Integer.parseInt(booking.getText())) + " kr.");
+            double amount = cost(Integer.parseInt(String.valueOf(days.getText())));
+            search.setText("Kostnaden blir " + cost(Integer.parseInt(booking.getText())) + " kr.");
             rental.setCost(amount);
             rentals.add(rental);
 
             double discount = getDiscountedCost(rental);
             rental.setCost(discount);
             listRental();
-            nameLabel.setText("Skriv in en ändring på historiken");
+            changeHistory.setText("Skriv in en ändring på historiken");
             booking.clear();
             booking.getText();
-            searchNamed.setHistory(booking.getText());
+            searchedNamed.setHistory(booking.getText());
         }
     }
 }

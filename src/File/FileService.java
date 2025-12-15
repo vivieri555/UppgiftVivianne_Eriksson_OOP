@@ -11,7 +11,6 @@ import java.io.*;
 
 public class FileService {
     MemberRegistry memberRegistry = new MemberRegistry();
-    Member member = new Member();
     TextField writerText = new TextField();
     String memberFile = "members.csv";
     String vehicleFile = "Vehicle.csv";
@@ -36,12 +35,14 @@ public class FileService {
         }
         return members;
     }
-
-    public void writeFile() {
-        String memberInfo = member.getId() + "," + member.getName() + "," + member.getStatus() + ","+ member.getHistory();
+//en rad för varje rad i tabellen, för varje member
+    public void writeFile(ObservableList<Member> members) {
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(memberFile))) {
-            writer.write(memberInfo);
+            for (Member member: members) {
+                String memberInfo = member.getId() + ","+ member.getName() +"," + member.getStatus() + "," + member.getHistory()+"\n";
+                writer.write(memberInfo);
+            }
             writerText.setText("Filen har sparats " + memberFile);
         } catch (IOException eFile) {
             writerText.setText("Gick inte att spara");

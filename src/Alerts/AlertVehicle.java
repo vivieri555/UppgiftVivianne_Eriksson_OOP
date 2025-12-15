@@ -1,6 +1,9 @@
-package Exceptions;
+package Alerts;
 
+import MemberPackage.Member;
+import MemberPackage.MembershipService;
 import Rental.Inventory;
+import Rental.RentalService;
 import Vehicle.Car;
 import Vehicle.*;
 import javafx.geometry.Insets;
@@ -16,11 +19,14 @@ import javafx.stage.Stage;
 
 public class AlertVehicle {
     Label message = new Label();
+    Label nameLabel = new Label();
     Inventory inventory;
     Button changeB = new Button("Spara ändring");
     Button save = new Button("Spara");
+    MembershipService membershipService;
 
     public AlertVehicle(Inventory inventory) {this.inventory = inventory;}
+    public AlertVehicle(MembershipService membershipService) {this.membershipService = membershipService;}
     public void addCar(Car car, TextField brandText, TextField modelText, TextField loanableText,
                        TextField vehicleTypeText, TextField hasRearCameraText, TextField gearboxText, TableView <Vehicle> vehicleTable) {
         Stage stage = new Stage();
@@ -126,5 +132,46 @@ public class AlertVehicle {
         Scene scene2 = new Scene(layout2);
         stage2.setScene(scene2);
         stage2.showAndWait();
+    }
+    public void bookCar (Vehicle vehicle, TableView <Vehicle> vehicleTable, TextField bookingText, TextField brandCar, TextField days) {
+        Stage stageBook = new Stage();
+        stageBook.setTitle("Boka bil");
+        stageBook.initModality(Modality.APPLICATION_MODAL);
+        stageBook.setMinWidth(600);
+
+        Label search = new Label();
+        Label changeHistory = new Label();
+        Button book = new Button("Boka");
+        brandCar.setText(vehicle.getBrand());
+        Label label = new Label("Vilken medlem vill du boka på?");
+
+        Label daysLabel = new Label("Hur många dagar vill du boka?");
+        days.getText();
+        RentalService rentalService = new RentalService();
+
+        book.setOnAction(e -> {
+            System.out.println(bookingText.getText());
+
+            Member searchNamed = membershipService.searchMemberList(bookingText.getText());
+
+            if (searchNamed == null) {
+                nameLabel.setText("Medlemmen finns inte");
+            }
+            rentalService.BookCar(searchNamed, bookingText, days, search, changeHistory);
+            vehicleTable.refresh();
+            stageBook.close();
+        });
+
+        VBox layout2 = new VBox();
+        layout2.setPadding(new Insets(10,10, 10,10));
+        layout2.setSpacing(10);
+        layout2.setStyle("-fx-background-color: #9400D3;");
+        layout2.getChildren().addAll(brandCar, label, bookingText, daysLabel,
+                days, search, changeHistory, book);
+        layout2.setAlignment(Pos.CENTER);
+
+        Scene scene2 = new Scene(layout2);
+        stageBook.setScene(scene2);
+        stageBook.showAndWait();
     }
 }

@@ -1,4 +1,4 @@
-package Exceptions;
+package Alerts;
 
 import MemberPackage.Member;
 import MemberPackage.MembershipService;
@@ -20,13 +20,6 @@ public class AlertBox {
     Button changeMember = new Button("Annan knapp?");
 
     Label labelName = new Label();
-    Label labelId = new Label();
-    Label labelStatus = new Label();
-    Label labelHistory = new Label();
-    TextField changeID = new TextField();
-    TextField changeName = new TextField();
-    TextField changeStatus = new TextField();
-    TextField changeHistory = new TextField();
 
     public AlertBox(MembershipService membershipService) {this.membershipService = membershipService;}
 
