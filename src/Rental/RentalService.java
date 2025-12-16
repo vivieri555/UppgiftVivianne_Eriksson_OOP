@@ -20,12 +20,13 @@ public class RentalService implements PricePolicy{
     public void add(Rental rental){
         rentals.add(rental);
     }
-    public void sum(){
+    public void sum(Label sumLabel, Label sumsLabel){
         double sum = 0;
         for(Rental cost: rentals){
+            sumLabel.setText("Intäkterna: " + cost.getCost());
             System.out.println("Intäkter: " + cost.getCost());
             sum = sum + cost.getCost();
-        } System.out.println("Summan av intäkterna: " + sum + " kr");
+        } sumsLabel.setText("Summan av intäkterna: " + sum + " kr");
     }
     public Vehicle searchCar(String search) {
         for (Vehicle car : inventory.getVehicleList()) {
@@ -45,13 +46,14 @@ public class RentalService implements PricePolicy{
             System.out.println(rental.member.getName() + ", bilen: " + rental.getVehicle() + ", " + rental.getRentalDays() + " dagar, Kostnad: " + rental.getCost());
             }
         }
-        public void terminateRental(String name){
+        public void terminateRental(String name, Label terminate){
         for(Rental rental: rentals){
             if(rental.getMember().equals(name)){
+                terminate.setText("Avslutar bokning på " + rental.getMember().getName());
                 System.out.println("Avslutar bokning på " + rental.getMember().getName());
                 delete(rental);
             }
-        } System.out.println("Avslutar bokningen");
+        } terminate.setText("Avslutar bokningen");
         }
     public void delete(Rental rental) {
         {
@@ -70,10 +72,11 @@ public class RentalService implements PricePolicy{
         }
         return discountedCost;
     }
-    public void available(){
+    public void available(Label available){
         for(Vehicle vehicle: inventory.getVehicleList()){
             if(vehicle.isLoanable()){
                 System.out.println(vehicle + " är tillgänglig att låna.");
+                available.setText(vehicle + " är tillgänglig att låna.\n");
             }
         }
     }

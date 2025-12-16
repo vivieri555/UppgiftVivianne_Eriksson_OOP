@@ -17,6 +17,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import File.FileService;
 
+import java.util.List;
+
 public class Main extends Application {
     public static void main(String[] args) {
         launch(args);
@@ -238,6 +240,7 @@ public class Main extends Application {
         HBox hBox4 = new HBox();
         hBox4.setPadding(new Insets(10, 10, 10, 10));
         hBox4.setSpacing(10);
+        Scene scene4 = new Scene(hBox4, 500, 500);
 
 
         //Button
@@ -285,7 +288,7 @@ public class Main extends Application {
         Button addButton = new Button("Spara medlem");
         Button deleteButton = new Button("Radera medlem");
         Button changeMButton = new Button("Ändra medlem");
-        Label changeLabel = new Label("Vilken medlem vill du ändra på?");
+        Label changeLabel = new Label("Markera medlem du vill ändra på och tryck sen Ändra medlem");
         TextField changeName = new TextField();
         changeName.setPromptText("Namn");
         TextField changeStatus = new TextField();
@@ -303,11 +306,21 @@ public class Main extends Application {
         Button changeCarB = new Button("Ändra fordon");
         Button saveBikeB = new Button("Lägg in ny cykel");
         Button bookVehicleButton = new Button("Boka Bil/Cykel");
+        Button terminateButton = new Button("Avsluta uthyrning");
+        Button availableButton = new Button("Sortera på tillgängliga fordon");
+        Button filterBike = new Button("Filtrera på bara cyklar");
+        Button unFilterBike = new Button("Ta bort filtreringen");
+
 
         //Label fordon
         Label vehicleLabel = new Label();
-        Label bookCarLabel = new Label("Markera en bil du önskar boka och tryck sen på Boka Bil");
+        Label bookCarLabel = new Label("Markera en bil/cykel du önskar boka och tryck sen på Boka Bil/cykel");
         Label brandLabel = new Label();
+        Label terminate = new Label();
+        Label terminateLabel = new Label();
+        Label availableLabel = new Label();
+        Label sumLabel = new Label();
+        Label sumsLabel = new Label();
 
 
         //TextField fordon
@@ -329,9 +342,17 @@ public class Main extends Application {
         basketText.setPromptText("Finns korg");
         TextField bookingText = new TextField();
         TextField daysText = new TextField();
+        TextField terminateText = new TextField();
 
         //knappar buttons fordon
         listCarMenu.setOnAction(e -> {
+        });
+
+        availableButton.setOnAction(e -> {
+            rentalService.available(availableLabel);});
+
+        filterBike.setOnAction(e -> {
+
         });
 
         saveBikeB.setOnAction(e -> {alertVehicle.addBike(bike, brandText,
@@ -364,6 +385,14 @@ public class Main extends Application {
             int valdRad = vehicleTable.getSelectionModel().getSelectedCells().get(0).getRow();
             car1 = vehicleTable.getItems().get(valdRad);
             alertVehicle.bookCar(car1, vehicleTable, bookingText, brandLabel, daysText);
+        });
+
+        terminateRental.setOnAction(e -> {
+            borderPane.setCenter(vBox2);
+            terminate.setText("Skriv namn på medlemmen du vill avsluta uthyrningen på");
+            String name = terminateText.getText();
+            terminateButton.setOnAction(ev -> {
+                rentalService.terminateRental(name, terminateLabel);});
         });
 
         addMemberM.setOnAction(e -> {
@@ -418,7 +447,6 @@ public class Main extends Application {
                 addName.clear();
             }
         });
-            //disable knappen från början kankse?
         changeMButton.setOnAction(e -> {
             Member member;
             int valdRad = table.getSelectionModel().getSelectedCells().get(0).getRow();
@@ -435,10 +463,13 @@ public class Main extends Application {
             stage.setScene(scene3);
         });
         Button revenueButton = new Button("Visa intäkter");
+
         revenue.setOnAction(e -> {
-            borderPane.setCenter(revenueButton);
+            borderPane.setCenter(hBox4);
+            revenueButton.setOnAction(ev -> {
+                rentalService.sum(sumLabel, sumsLabel);});
         });
-        revenueButton.setOnAction(e -> {rentalService.sum();});
+
 
         MenuBar menuBar = new MenuBar();
         menuBar.getMenus().addAll(memberMenu, carMenu, revenueMenu);
@@ -460,17 +491,17 @@ public class Main extends Application {
 
         //sökningen medlemmar
         vBox3.getChildren().addAll(addNameLabel, addName, searchMButton, saveLabel);
-        //Ändra medlem
-//        vBox2.getChildren().addAll(changeLabel, changeNameL, changeName, changeStatusL
-//                , changeStatus, changeHistoryL, changeHistory, changeMButton);
+        //avsluta fordons uthyrning
+        vBox2.getChildren().addAll(terminate, terminateText, terminateButton, terminateLabel);
 
         //boka bil
-       // hBox4.getChildren().addAll(bookCarLabel, bookingText);
+        hBox4.getChildren().addAll(revenueButton, sumsLabel, sumLabel);
 
         //Bilars lista, meny
         hBox3.getChildren().addAll(brandInput, modelInput, loanableInput, vehicleTypeInput,
                 hasRearCameraInput, gearboxInput, gearsInput, basketInput);
-        vBox5.getChildren().addAll(returnScene2, bookCarLabel, bookVehicleButton, vehicleTable,
+        vBox5.getChildren().addAll(returnScene2, bookCarLabel, bookVehicleButton,
+                availableLabel, availableButton, vehicleTable,
                 vehicleLabel, saveCarB, saveBikeB, changeCarB, deleteVButton);
 
         borderPane.getChildren().addAll();

@@ -1,20 +1,16 @@
 package MemberPackage;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TextField;
-
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class MembershipService{
     Scanner input = new Scanner(System.in);
     MemberRegistry memberRegistry;
-    TextField text;
 
     public MembershipService(MemberRegistry memberRegistry){
         this.memberRegistry = memberRegistry;
     }
 
-    //Hämta observablelist  objekt istället för arraylistMembers
     public Member searchMemberList(String searchedMember){
         for(Member member: memberRegistry.getMembers()){
             if(member.getName().contains(searchedMember)){

@@ -2,12 +2,14 @@ package Rental;
 import Vehicle.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Inventory {
-    Car car = new Car();
-    Bike bike = new Bike();
 
     private ObservableList<Vehicle> vehicleList = FXCollections.observableArrayList();
     public Inventory(){}
@@ -21,15 +23,20 @@ public class Inventory {
         vehicleList.add(v);
     }
     public void remove(Vehicle v) { vehicleList.remove(v); }
-    public void input(TextField brandText, TextField modelText,
-                      TextField loanableText, TextField vehicleTypeText, TextField hasRearCameraText,
-                      TextField gearboxText) {
-        brandText.getText();
-        modelText.getText();
-        loanableText.getText();
-        vehicleTypeText.getText();
-        hasRearCameraText.getText();
-        gearboxText.getText();
+    public void filterV (TableView<Vehicle> vehicleTable) {
+//        vehicleTable.getColumns().clear();
+//        ObservableList<Vehicle> bikes = (ObservableList<Vehicle>) vehicleList.stream().filter(b -> b instanceof Bike).collect(Collectors.toList());
+//        vehicleTable.setItems(bikes);
+        FilteredList<Vehicle> bike = new FilteredList<>(vehicleList, p -> true);
+        bike.setPredicate(vehicle -> vehicle.getBrand().toLowerCase().contains(vehicle.getBrand().toLowerCase()));
+        vehicleTable.setItems(bike);
+    }
+    public void unFilterV(TableView<Vehicle> vehicleTable, Label label) {
+        for (Vehicle v : vehicleTable.getItems()) {
+            if (v instanceof Bike){
+                System.out.println(v);
+            }
+        }
     }
     public void addCar (Car car, TextField brandText, TextField modelText,
                       TextField loanableText, TextField vehicleTypeText, TextField hasRearCameraText,
@@ -50,23 +57,6 @@ public class Inventory {
         bike.setGears(gearsText.getText());
         bike.setBasket(basketText.getText());
         vehicleList.add(bike);
-    }
-    public void clearC(TextField brandText, TextField modelInput, TextField loanableInput,
-                      TextField vehicleTypeInput, TextField hasRearCameraInput, TextField gearboxInput) {
-        brandText.clear();
-        modelInput.clear();
-        loanableInput.clear();
-        vehicleTypeInput.clear();
-        hasRearCameraInput.clear();
-        gearboxInput.clear();
-    }
-    public void clearB(TextField brandText, TextField modelInput, TextField loanableInput,
-                       TextField gearsInput, TextField basketInput) {
-        brandText.clear();
-        modelInput.clear();
-        loanableInput.clear();
-        gearsInput.clear();
-        basketInput.clear();
     }
     public void changeCar (Car car, TextField brandInput, TextField modelInput, TextField loanableInput,
                            TextField vehicleTypeInput, TextField hasRearCameraInput, TextField gearboxInput) {

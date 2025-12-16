@@ -176,7 +176,7 @@ public class AlertVehicle {
         layout2.setSpacing(10);
         layout2.setStyle("-fx-background-color: #FFB6C1;");
         layout2.getChildren().addAll(brandCar, label, bookingText, daysLabel,
-                days, search, changeHistory, historyText, saved, book, closeButton);
+                days, changeHistory, historyText, search, saved, book, closeButton);
         layout2.setAlignment(Pos.CENTER);
 
         Scene scene2 = new Scene(layout2);
