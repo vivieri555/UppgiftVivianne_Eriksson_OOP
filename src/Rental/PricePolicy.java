@@ -2,6 +2,6 @@ package Rental;
 
 public interface PricePolicy {
 
-   double cost(int time);
+   int cost(int time);
     double getDiscountedCost(Rental rental);
 }

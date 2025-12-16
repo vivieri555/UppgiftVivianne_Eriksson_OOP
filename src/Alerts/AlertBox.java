@@ -34,7 +34,7 @@ public class AlertBox {
         VBox layout = new VBox();
         layout.setPadding(new Insets(10,10, 10,10));
         layout.setSpacing(10);
-        layout.setStyle("-fx-background-color: #9400D3;");
+        layout.setStyle("-fx-background-color: #FFB6C1;");
         layout.getChildren().addAll(label, closeButton);
         layout.setAlignment(Pos.CENTER);
 
@@ -63,7 +63,7 @@ public class AlertBox {
         VBox layout2 = new VBox();
         layout2.setPadding(new Insets(10,10, 10,10));
         layout2.setSpacing(10);
-        layout2.setStyle("-fx-background-color: #9400D3;");
+        layout2.setStyle("-fx-background-color: #FFB6C1;");
         layout2.getChildren().addAll(label2, idInput, nameInput, changeStatus, changeHistory, closeButton);
         layout2.setAlignment(Pos.CENTER);
 

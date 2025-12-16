@@ -88,9 +88,9 @@ public class Main extends Application {
         MemberRegistry memberRegistry = new MemberRegistry(members);
         getInventory();
         MembershipService membershipService = new MembershipService(memberRegistry);
-        RentalService rentalService = new RentalService(inventory);
+        RentalService rentalService = new RentalService(inventory, membershipService);
         AlertBox alertBox = new AlertBox(membershipService);
-        AlertVehicle alertVehicle = new AlertVehicle(inventory);
+        AlertVehicle alertVehicle = new AlertVehicle(inventory, membershipService);
         Bike bike = new Bike();
         Car car = new Car();
 
@@ -262,8 +262,8 @@ public class Main extends Application {
         MenuItem revenue = new MenuItem("Summera intäkter...");
         revenueMenu.getItems().add(revenue);
 
-        Label writerLabel = new Label("----------------------\nFilinläsning:\n");
-        Button writerButton = new Button("Uppdatera medlemmar till fil");
+        Label writerLabel = new Label();
+        Button writerButton = new Button("Spara medlemmar till fil");
         TextField writerText = new TextField();
 
         Label idLabel = new Label();
@@ -294,7 +294,6 @@ public class Main extends Application {
         changeHistory.setPromptText("Historik");
         Label deleteL = new Label("Vilken medlem vill du radera?");
         TextField deleteT = new TextField();
-
         TextField searchName = new TextField();
         searchName.setPromptText("Namn");
 
@@ -303,12 +302,13 @@ public class Main extends Application {
         Button deleteVButton = new Button("Radera fordon");
         Button changeCarB = new Button("Ändra fordon");
         Button saveBikeB = new Button("Lägg in ny cykel");
-        Button bookCar = new Button("Boka Bil");
-        Button bookBike = new Button("Boka cykel");
+        Button bookVehicleButton = new Button("Boka Bil/Cykel");
 
         //Label fordon
         Label vehicleLabel = new Label();
         Label bookCarLabel = new Label("Markera en bil du önskar boka och tryck sen på Boka Bil");
+        Label brandLabel = new Label();
+
 
         //TextField fordon
         TextField brandText = new TextField();
@@ -328,9 +328,7 @@ public class Main extends Application {
         TextField basketText = new TextField();
         basketText.setPromptText("Finns korg");
         TextField bookingText = new TextField();
-        TextField brandCarText = new TextField();
         TextField daysText = new TextField();
-        TextField nameBook = new TextField();
 
         //knappar buttons fordon
         listCarMenu.setOnAction(e -> {
@@ -361,11 +359,11 @@ public class Main extends Application {
             gearboxInput.getText();
         });
 
-        bookCar.setOnAction(e -> {
+        bookVehicleButton.setOnAction(e -> {
             Vehicle car1;
             int valdRad = vehicleTable.getSelectionModel().getSelectedCells().get(0).getRow();
             car1 = vehicleTable.getItems().get(valdRad);
-            alertVehicle.bookCar(car1, vehicleTable, bookingText, brandCarText, daysText);
+            alertVehicle.bookCar(car1, vehicleTable, bookingText, brandLabel, daysText);
         });
 
         addMemberM.setOnAction(e -> {
@@ -400,6 +398,7 @@ public class Main extends Application {
             Member memberDel = membershipService.searchMemberList(deleteT.getText());
             membershipService.delMember(memberDel);
             alertBox.display("Radera medlem", "Medlem raderad");
+            deleteT.clear();
         });
 
         searchMemberM.setOnAction(e -> {
@@ -471,7 +470,7 @@ public class Main extends Application {
         //Bilars lista, meny
         hBox3.getChildren().addAll(brandInput, modelInput, loanableInput, vehicleTypeInput,
                 hasRearCameraInput, gearboxInput, gearsInput, basketInput);
-        vBox5.getChildren().addAll(returnScene2, bookCarLabel, bookCar, vehicleTable,
+        vBox5.getChildren().addAll(returnScene2, bookCarLabel, bookVehicleButton, vehicleTable,
                 vehicleLabel, saveCarB, saveBikeB, changeCarB, deleteVButton);
 
         borderPane.getChildren().addAll();

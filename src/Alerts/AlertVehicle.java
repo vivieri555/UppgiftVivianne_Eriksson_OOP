@@ -23,10 +23,13 @@ public class AlertVehicle {
     Inventory inventory;
     Button changeB = new Button("Spara ändring");
     Button save = new Button("Spara");
+    Label saved = new Label();
     MembershipService membershipService;
 
-    public AlertVehicle(Inventory inventory) {this.inventory = inventory;}
-    public AlertVehicle(MembershipService membershipService) {this.membershipService = membershipService;}
+    public AlertVehicle(Inventory inventory, MembershipService membershipService) {
+        this.inventory = inventory;
+        this.membershipService = membershipService;}
+
     public void addCar(Car car, TextField brandText, TextField modelText, TextField loanableText,
                        TextField vehicleTypeText, TextField hasRearCameraText, TextField gearboxText, TableView <Vehicle> vehicleTable) {
         Stage stage = new Stage();
@@ -50,12 +53,12 @@ public class AlertVehicle {
             vehicleTypeText.clear();
             hasRearCameraText.clear();
             gearboxText.clear();
-                stage.close();});
+            stage.close();});
 
         VBox layout = new VBox();
         layout.setPadding(new Insets(10,10, 10,10));
         layout.setSpacing(10);
-        layout.setStyle("-fx-background-color: #9400D3;");
+        layout.setStyle("-fx-background-color: #FFB6C1;");
         layout.getChildren().addAll(carL, save, brandText, modelText, loanableText,
                 vehicleTypeText, hasRearCameraText, gearboxText);
         layout.setAlignment(Pos.CENTER);
@@ -92,7 +95,7 @@ public class AlertVehicle {
         VBox layout = new VBox();
         layout.setPadding(new Insets(10,10, 10,10));
         layout.setSpacing(10);
-        layout.setStyle("-fx-background-color: #9400D3;");
+        layout.setStyle("-fx-background-color: #FFB6C1;");
         layout.getChildren().addAll(bikeL, save, brandText, modelText, loanableText,
                 gearsText, basketText);
         layout.setAlignment(Pos.CENTER);
@@ -125,7 +128,7 @@ public class AlertVehicle {
         VBox layout2 = new VBox();
         layout2.setPadding(new Insets(10,10, 10,10));
         layout2.setSpacing(10);
-        layout2.setStyle("-fx-background-color: #9400D3;");
+        layout2.setStyle("-fx-background-color: #FFB6C1;");
         layout2.getChildren().addAll(message, brandInput, modelInput, loanableInput, vehicleTypeInput, hasRearCameraInput, gearboxInput, changeB);
         layout2.setAlignment(Pos.CENTER);
 
@@ -133,41 +136,47 @@ public class AlertVehicle {
         stage2.setScene(scene2);
         stage2.showAndWait();
     }
-    public void bookCar (Vehicle vehicle, TableView <Vehicle> vehicleTable, TextField bookingText, TextField brandCar, TextField days) {
+    public void bookCar (Vehicle vehicle, TableView <Vehicle> vehicleTable, TextField bookingText, Label brandCar, TextField days) {
         Stage stageBook = new Stage();
-        stageBook.setTitle("Boka bil");
+        stageBook.setTitle("Boka bil/cykel");
         stageBook.initModality(Modality.APPLICATION_MODAL);
         stageBook.setMinWidth(600);
 
+        TextField historyText = new TextField();
         Label search = new Label();
         Label changeHistory = new Label();
         Button book = new Button("Boka");
+        Button closeButton = new Button("Stäng fönstret");
         brandCar.setText(vehicle.getBrand());
         Label label = new Label("Vilken medlem vill du boka på?");
 
         Label daysLabel = new Label("Hur många dagar vill du boka?");
         days.getText();
-        RentalService rentalService = new RentalService();
+
+        changeHistory.setText("Skriv in en ändring på historiken");
+
+        RentalService rentalService = new RentalService(inventory, membershipService);
 
         book.setOnAction(e -> {
-            System.out.println(bookingText.getText());
 
             Member searchNamed = membershipService.searchMemberList(bookingText.getText());
 
             if (searchNamed == null) {
                 nameLabel.setText("Medlemmen finns inte");
             }
-            rentalService.BookCar(searchNamed, bookingText, days, search, changeHistory);
+            rentalService.bookVehicle(searchNamed, bookingText, days, search, changeHistory, historyText, saved);
             vehicleTable.refresh();
-            stageBook.close();
         });
+
+        closeButton.setOnAction(e -> {
+            stageBook.close();});
 
         VBox layout2 = new VBox();
         layout2.setPadding(new Insets(10,10, 10,10));
         layout2.setSpacing(10);
-        layout2.setStyle("-fx-background-color: #9400D3;");
+        layout2.setStyle("-fx-background-color: #FFB6C1;");
         layout2.getChildren().addAll(brandCar, label, bookingText, daysLabel,
-                days, search, changeHistory, book);
+                days, search, changeHistory, historyText, saved, book, closeButton);
         layout2.setAlignment(Pos.CENTER);
 
         Scene scene2 = new Scene(layout2);
