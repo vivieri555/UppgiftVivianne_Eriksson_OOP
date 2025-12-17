@@ -5,6 +5,7 @@ import Vehicle.Vehicle;
 import java.util.ArrayList;
 
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
 public class RentalService implements PricePolicy{
@@ -20,6 +21,7 @@ public class RentalService implements PricePolicy{
     public void add(Rental rental){
         rentals.add(rental);
     }
+
     public void sum(Label sumLabel, Label sumsLabel){
         double sum = 0;
         for(Rental cost: rentals){
@@ -46,11 +48,12 @@ public class RentalService implements PricePolicy{
             System.out.println(rental.member.getName() + ", bilen: " + rental.getVehicle() + ", " + rental.getRentalDays() + " dagar, Kostnad: " + rental.getCost());
             }
         }
-        public void terminateRental(String name, Label terminate){
+        public void terminateRental(String name, Label termLabel, Label terminate){
         for(Rental rental: rentals){
             if(rental.getMember().equals(name)){
-                terminate.setText("Avslutar bokning på " + rental.getMember().getName());
+                termLabel.setText("Avslutar bokning på " + rental.getMember().getName());
                 System.out.println("Avslutar bokning på " + rental.getMember().getName());
+                rental.getVehicle().setLoanable(true);
                 delete(rental);
             }
         } terminate.setText("Avslutar bokningen");
@@ -72,13 +75,15 @@ public class RentalService implements PricePolicy{
         }
         return discountedCost;
     }
-    public void available(Label available){
+    public String available(){
+        String text = "";
         for(Vehicle vehicle: inventory.getVehicleList()){
             if(vehicle.isLoanable()){
                 System.out.println(vehicle + " är tillgänglig att låna.");
-                available.setText(vehicle + " är tillgänglig att låna.\n");
+                text = vehicle + " är tillgänglig att låna.\n";
+                //available.setText(vehicle + " är tillgänglig att låna.\n");
             }
-        }
+        } return text;
     }
     public void bookVehicle(Member searchedNamed, TextField booking, TextField days,
                             Label search, Label changeHistory, TextField historyText, Label saved) {
@@ -97,7 +102,6 @@ public class RentalService implements PricePolicy{
 
             String day = String.valueOf((days.getText()));
             rental.setRentalDays(Integer.parseInt(day));
-
             int amount = cost(Integer.parseInt(days.getText()));
             search.setText("Kostnaden blir " + amount + " kr.");
             rental.setCost(amount);

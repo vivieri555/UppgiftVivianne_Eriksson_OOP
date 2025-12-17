@@ -2,7 +2,6 @@ import Alerts.AlertBox;
 import Alerts.AlertVehicle;
 import MemberPackage.*;
 import Rental.Inventory;
-import Rental.Rental;
 import Rental.RentalService;
 import Vehicle.*;
 import javafx.application.Application;
@@ -17,87 +16,30 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import File.FileService;
 
-import java.util.List;
-
 public class Main extends Application {
     public static void main(String[] args) {
         launch(args);
-
-     /*
-//            System.out.println("Tryck 5 för att lista/söka på fordon");
-//            System.out.println("Tryck 6 för att boka en bil");
-//            System.out.println("Tryck 7 för att avsluta en uthyrning av bil");
-//            System.out.println("Tryck 8 för att summera intäkter");
-
-                case 6:
-                    Rental rental = new Rental();
-                    input.nextLine();
-                    System.out.println("Ange namn på medlem du vill boka bil på?");
-                    String searchName = input.nextLine();
-                    Member searchNamed = membershipService.searchMemberList(searchName);
-                    if(searchNamed == null){
-                        System.out.println("Medlemmen finns inte, skriv in medlemmen i menyval 1");
-                    }
-                    else{
-                        System.out.println("Medlemmen finns Id: " + searchNamed.getId() + ", " + searchNamed.getName());
-                        rental.setMember(searchNamed);
-                        System.out.println("Vilken bil vill du boka? Ange varumärke");
-                        String car = input.nextLine();
-                        Vehicle car1 = rentalService.searchCar(car);
-                        if(car1 == null || !car1.isLoanable()){
-                            System.out.println("Bilen går inte att låna");
-                        }
-                        else{
-                            car1.setLoanable(false);
-                            rental.setVehicle(car1);
-                            System.out.println("Hur många dagar vill du låna?");
-                            int days = input.nextInt();
-                            rental.setRentalDays(days);
-                            double amount = rentalService.cost(days);
-                            System.out.println("Kostnaden blir " + rentalService.cost(days) + " kr.");
-                            rental.setCost(amount);
-                            rentalService.add(rental);
-                            double discount = rentalService.getDiscountedCost(rental);
-                            rental.setCost(discount);
-                            rentalService.listRental();
-                            input.nextLine();
-                            System.out.println("Skriv in en ändring på historiken");
-                            searchNamed.setHistory(input.nextLine());
-                        }
-                    }
-                    break;
-                case 7:
-                    input.nextLine();
-                    System.out.println("Vilken medlem vill du avsluta bokningen på?");
-                    String name = input.nextLine();
-                    rentalService.terminateRental(name);
-                    vehicle.setLoanable(true);
-                    break;
-                case 8:
-                    rentalService.sum();
-                    break;
-                 */
     }
 
     @Override
     public void start(Stage stage) throws Exception {
 
         FileService fileService = new FileService();
-        Vehicle vehicle = new Vehicle();
         ObservableList<Member> members = fileService.readMembers();
         ObservableList<Vehicle> vehicles = fileService.readVehicles();
-        Inventory inventory = new Inventory(vehicles);
+        ObservableList<Vehicle> bikes = fileService.readBikes();
+        Inventory inventory = new Inventory(vehicles, bikes);
         MemberRegistry memberRegistry = new MemberRegistry(members);
-        getInventory();
         MembershipService membershipService = new MembershipService(memberRegistry);
         RentalService rentalService = new RentalService(inventory, membershipService);
         AlertBox alertBox = new AlertBox(membershipService);
-        AlertVehicle alertVehicle = new AlertVehicle(inventory, membershipService);
+        AlertVehicle alertVehicle = new AlertVehicle(inventory, membershipService, rentalService);
         Bike bike = new Bike();
         Car car = new Car();
 
 
         stage.setTitle("Vivis Biluthyrning");
+
         BorderPane borderPane = new BorderPane();
         borderPane.setPadding(new Insets(10, 10, 10, 10));
         Label headLabel = new Label("\tVälkommen\n till Vivis biluthyrning!");
@@ -109,7 +51,6 @@ public class Main extends Application {
         TableColumn<Vehicle, String> brandColumn = new TableColumn("Märke");
         brandColumn.setMinWidth(200);
         brandColumn.setCellValueFactory(new PropertyValueFactory<>("brand"));
-        vehicleTable.setItems(inventory.getVehicleList());
         TextField brandInput = new TextField();
         brandInput.setPromptText("Märke");
         brandInput.setMinWidth(200);
@@ -161,6 +102,13 @@ public class Main extends Application {
         vehicleTable.setItems(inventory.getVehicleList());
         vehicleTable.getColumns().addAll(brandColumn, modelColumn, loanableColumn, vehicleTypeColumn, hasRearCameraColumn, gearboxColumn, gearsColumn, basketColumn);
 
+        TableView<Vehicle> availableTable = new TableView<>();
+        TableColumn<Vehicle, String> availableColumn = new TableColumn<>("Tillgängliga märken");
+        availableColumn.setMinWidth(200);
+        availableColumn.setCellValueFactory(new PropertyValueFactory<>("brand"));
+        availableTable.getColumns().addAll(availableColumn);
+        availableTable.setItems(inventory.getVehicleList());
+
         //TableView medlemmar
         TableView<Member> table = new TableView<>();
         TableColumn<Member, Integer> idColumn = new TableColumn<>("Id");
@@ -193,12 +141,10 @@ public class Main extends Application {
         historyInput.setPromptText("Historik");
         historyInput.setMinWidth(200);
 
-
         Button returnScene = new Button("Gå tillbaka till huvudmenyn");
         returnScene.setMinWidth(100);
         Button returnScene2 = new Button("Gå tillbaka till huvudmenyn");
         returnScene2.setMinWidth(100);
-
 
         table.getColumns().addAll(idColumn, nameColumn, statusColumn, historyColumn);
 
@@ -242,6 +188,9 @@ public class Main extends Application {
         hBox4.setSpacing(10);
         Scene scene4 = new Scene(hBox4, 500, 500);
 
+        VBox vBox6 = new VBox();
+        vBox6.setPadding(new Insets(10, 10, 10, 10));
+        vBox6.setSpacing(10);
 
         //Button
         returnScene.setOnAction(e -> {
@@ -254,11 +203,11 @@ public class Main extends Application {
 
         Menu memberMenu = new Menu("Medlemmar");
         MenuItem addMemberM = new MenuItem("Hantera medlemmar...");
-        MenuItem searchMemberM = new MenuItem("Sök upp information om medlem");
+        MenuItem searchMemberM = new MenuItem("Sök upp information om medlem...");
 
         Menu carMenu = new Menu("Fordon");
-        MenuItem listCarMenu = new MenuItem("Hantera fordon...");
-        MenuItem bookCarMenu = new MenuItem("Boka en bil/cykel...");
+        MenuItem listCarMenu = new MenuItem("Hantera/Boka fordon...");
+        MenuItem availiableMenu = new MenuItem("Filtrera på tillgängliga bilar...");
         MenuItem terminateRental = new MenuItem("Avsluta en uthyrning...");
 
         Menu revenueMenu = new Menu("Intäkter");
@@ -267,7 +216,6 @@ public class Main extends Application {
 
         Label writerLabel = new Label();
         Button writerButton = new Button("Spara medlemmar till fil");
-        TextField writerText = new TextField();
 
         Label idLabel = new Label();
         TextField idText = new TextField();
@@ -310,7 +258,7 @@ public class Main extends Application {
         Button availableButton = new Button("Sortera på tillgängliga fordon");
         Button filterBike = new Button("Filtrera på bara cyklar");
         Button unFilterBike = new Button("Ta bort filtreringen");
-
+        Button revenueButton = new Button("Visa intäkter");
 
         //Label fordon
         Label vehicleLabel = new Label();
@@ -318,6 +266,7 @@ public class Main extends Application {
         Label brandLabel = new Label();
         Label terminate = new Label();
         Label terminateLabel = new Label();
+        Label termLabel = new Label();
         Label availableLabel = new Label();
         Label sumLabel = new Label();
         Label sumsLabel = new Label();
@@ -343,16 +292,31 @@ public class Main extends Application {
         TextField bookingText = new TextField();
         TextField daysText = new TextField();
         TextField terminateText = new TextField();
+        TextArea textArea = new TextArea();
+        textArea.setEditable(false);
+        textArea.setPrefSize(200, 200);
 
-        //knappar buttons fordon
+        //knappar funktionalitet fordon
         listCarMenu.setOnAction(e -> {
+            stage.setScene(scene3);
         });
 
-        availableButton.setOnAction(e -> {
-            rentalService.available(availableLabel);});
+        availiableMenu.setOnAction(e -> {
+            borderPane.setLeft(vBox6);
+            availableButton.setOnAction(ev -> {
+                String result = rentalService.available();
+                textArea.setText(result);
+            });
+        });
+
+        revenue.setOnAction(e -> {
+            borderPane.setCenter(hBox4);
+            revenueButton.setOnAction(ev -> {
+                rentalService.sum(sumLabel, sumsLabel);});
+        });
 
         filterBike.setOnAction(e -> {
-
+            inventory.filterV(vehicleTable);
         });
 
         saveBikeB.setOnAction(e -> {alertVehicle.addBike(bike, brandText,
@@ -392,7 +356,7 @@ public class Main extends Application {
             terminate.setText("Skriv namn på medlemmen du vill avsluta uthyrningen på");
             String name = terminateText.getText();
             terminateButton.setOnAction(ev -> {
-                rentalService.terminateRental(name, terminateLabel);});
+                rentalService.terminateRental(name, termLabel, terminateLabel);});
         });
 
         addMemberM.setOnAction(e -> {
@@ -459,53 +423,40 @@ public class Main extends Application {
             changeHistory.getText();
         });
 
-        listCarMenu.setOnAction(e -> {
-            stage.setScene(scene3);
-        });
-        Button revenueButton = new Button("Visa intäkter");
-
-        revenue.setOnAction(e -> {
-            borderPane.setCenter(hBox4);
-            revenueButton.setOnAction(ev -> {
-                rentalService.sum(sumLabel, sumsLabel);});
-        });
-
-
         MenuBar menuBar = new MenuBar();
         menuBar.getMenus().addAll(memberMenu, carMenu, revenueMenu);
         memberMenu.getItems().addAll(addMemberM, searchMemberM);
-        carMenu.getItems().addAll(listCarMenu, bookCarMenu, terminateRental);
+        carMenu.getItems().addAll(listCarMenu, availiableMenu, terminateRental);
 
         borderPane.setCenter(headLabel);
         borderPane.setTop(menuBar);
 
         //Översta Hbox i tableView Medlemmar
         hbox.getChildren().addAll(idInput, nameInput, statusInput, historyInput);
-
         //Lägga till/ta bort medlemmar/lista tabell
         hBox2.getChildren().addAll(idText, addNameText, statusText, historyInput, addButton);
 
-        vbox1.getChildren().addAll(writerLabel, writerButton, writerText, table, returnScene
+        vbox1.getChildren().addAll(writerLabel, writerButton, table, returnScene
                 , idLabel, hBox2, searchMButton, saveLabel, addMLabel,
                 changeLabel, changeMButton, deleteL, deleteT, deleteButton);
-
         //sökningen medlemmar
         vBox3.getChildren().addAll(addNameLabel, addName, searchMButton, saveLabel);
         //avsluta fordons uthyrning
-        vBox2.getChildren().addAll(terminate, terminateText, terminateButton, terminateLabel);
+        vBox2.getChildren().addAll(terminate, terminateText, terminateButton, termLabel, terminateLabel);
 
-        //boka bil
+        //Intäkter
         hBox4.getChildren().addAll(revenueButton, sumsLabel, sumLabel);
 
         //Bilars lista, meny
         hBox3.getChildren().addAll(brandInput, modelInput, loanableInput, vehicleTypeInput,
                 hasRearCameraInput, gearboxInput, gearsInput, basketInput);
         vBox5.getChildren().addAll(returnScene2, bookCarLabel, bookVehicleButton,
-                availableLabel, availableButton, vehicleTable,
+                filterBike, vehicleTable,
                 vehicleLabel, saveCarB, saveBikeB, changeCarB, deleteVButton);
+        //Försöka söka på tillgängliga bilar
+        vBox6.getChildren().addAll(availableButton, availableLabel, textArea);
 
         borderPane.getChildren().addAll();
-
         scene3.getStylesheets().add("MenuColors.css");
         scene2.getStylesheets().add("MenuColors.css");
         scene1.getStylesheets().add("MenuColors.css");
@@ -515,14 +466,4 @@ public class Main extends Application {
 
     }
 
-    private Inventory getInventory() {
-        Inventory inventory = new Inventory();
-
-        inventory.addVehicle(new Car("BMW", "z4", true, "Elektrisk bil", "Ja", "Automat"));
-        inventory.addVehicle(new Car("Volvo", "v90", true, "Familjebil", "Ja", "Automat"));
-        inventory.addVehicle(new Car("Tesla", "Model X", true, "Elektrisk bil", "Ja", "Automat"));
-        inventory.addVehicle(new Bike("Kawasaki", "i3", true, "7-växlar", "Finns cykelkorg"));
-        inventory.addVehicle(new Bike("Turbo", "v8", true, "5-växlar", "Ingen cykelkorg"));
-        return inventory;
-    }
 }

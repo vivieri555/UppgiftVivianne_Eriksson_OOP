@@ -14,10 +14,9 @@ public class FileService {
     TextField writerText = new TextField();
     String memberFile = "members.csv";
     String vehicleFile = "Vehicle.csv";
-    String bikeFile = "bike.csv";
+    String bikeFile = "bikeFile.csv";
 
     public ObservableList<Member> readMembers() {
-        //Inventory o memberRegistry läsas in från fil o populera aktuell tabell
         ObservableList<Member> members = FXCollections.observableArrayList();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(memberFile))) {
@@ -74,6 +73,7 @@ public class FileService {
             }
         } catch (IOException error) {
             writerText.setText("Problem att läsa in");
+            System.out.println("Kunde inte läsa in Bikes");
         }
         return vehicles;
     }

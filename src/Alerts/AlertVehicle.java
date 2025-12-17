@@ -25,10 +25,13 @@ public class AlertVehicle {
     Button save = new Button("Spara");
     Label saved = new Label();
     MembershipService membershipService;
+    RentalService rentalService;
 
-    public AlertVehicle(Inventory inventory, MembershipService membershipService) {
+    public AlertVehicle(Inventory inventory, MembershipService membershipService, RentalService rentalService) {
         this.inventory = inventory;
-        this.membershipService = membershipService;}
+        this.membershipService = membershipService;
+        this.rentalService = rentalService;
+    }
 
     public void addCar(Car car, TextField brandText, TextField modelText, TextField loanableText,
                        TextField vehicleTypeText, TextField hasRearCameraText, TextField gearboxText, TableView <Vehicle> vehicleTable) {
@@ -154,8 +157,6 @@ public class AlertVehicle {
         days.getText();
 
         changeHistory.setText("Skriv in en ändring på historiken");
-
-        RentalService rentalService = new RentalService(inventory, membershipService);
 
         book.setOnAction(e -> {
 
