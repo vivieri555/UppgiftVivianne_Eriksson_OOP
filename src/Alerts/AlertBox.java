@@ -15,10 +15,7 @@ import javafx.stage.Stage;
 
 public class AlertBox {
     Button closeButton = new Button("Ok");
-    Stage stage2;
     MembershipService membershipService;
-    Button changeMember = new Button("Annan knapp?");
-
     Label labelName = new Label();
 
     public AlertBox(MembershipService membershipService) {this.membershipService = membershipService;}

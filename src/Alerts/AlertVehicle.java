@@ -32,7 +32,6 @@ public class AlertVehicle {
         this.membershipService = membershipService;
         this.rentalService = rentalService;
     }
-
     public void addCar(Car car, TextField brandText, TextField modelText, TextField loanableText,
                        TextField vehicleTypeText, TextField hasRearCameraText, TextField gearboxText, TableView <Vehicle> vehicleTable) {
         Stage stage = new Stage();
@@ -123,7 +122,6 @@ public class AlertVehicle {
         hasRearCameraInput.setText(car.getHasRearCamera());
         gearboxInput.setText(car.getGearbox());
 
-
         changeB.setOnAction(e -> {
             inventory.changeCar(car, brandInput, modelInput, loanableInput, vehicleTypeInput, hasRearCameraInput, gearboxInput);
             vehicleTable.refresh();
@@ -146,26 +144,23 @@ public class AlertVehicle {
         stageBook.setMinWidth(600);
 
         TextField historyText = new TextField();
+        Label discountLabel = new Label();
         Label search = new Label();
         Label changeHistory = new Label();
         Button book = new Button("Boka");
         Button closeButton = new Button("Stäng fönstret");
         brandCar.setText(vehicle.getBrand());
         Label label = new Label("Vilken medlem vill du boka på?");
-
         Label daysLabel = new Label("Hur många dagar vill du boka?");
         days.getText();
-
         changeHistory.setText("Skriv in en ändring på historiken");
 
         book.setOnAction(e -> {
-
             Member searchNamed = membershipService.searchMemberList(bookingText.getText());
-
             if (searchNamed == null) {
                 nameLabel.setText("Medlemmen finns inte");
             }
-            rentalService.bookVehicle(searchNamed, bookingText, days, search, changeHistory, historyText, saved);
+            rentalService.bookVehicle(vehicle, searchNamed, bookingText, days, search, discountLabel, historyText, saved);
             vehicleTable.refresh();
         });
 
@@ -177,7 +172,7 @@ public class AlertVehicle {
         layout2.setSpacing(10);
         layout2.setStyle("-fx-background-color: #FFB6C1;");
         layout2.getChildren().addAll(brandCar, label, bookingText, daysLabel,
-                days, changeHistory, historyText, search, saved, book, closeButton);
+                days, changeHistory, historyText, search, discountLabel, saved, book, closeButton);
         layout2.setAlignment(Pos.CENTER);
 
         Scene scene2 = new Scene(layout2);

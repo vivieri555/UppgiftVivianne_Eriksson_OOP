@@ -1,8 +1,8 @@
 package Rental;
+import File.FileService;
 import Vehicle.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import java.util.stream.Collectors;
@@ -11,9 +11,8 @@ public class Inventory {
 
     private ObservableList<Vehicle> vehicleList = FXCollections.observableArrayList();
     public Inventory(){}
-    public Inventory(ObservableList<Vehicle> vehicleList, ObservableList<Vehicle> bikes) {
+    public Inventory(ObservableList<Vehicle> vehicleList) {
         this.vehicleList = vehicleList;
-        this.vehicleList.addAll(bikes);
     }
     public ObservableList<Vehicle> getVehicleList(){
         return vehicleList;
@@ -30,13 +29,11 @@ public class Inventory {
         vehicleTable.getItems().clear();
         vehicleTable.setItems(bikes);
     }
-    //Göra tvärtom och spara till listan
-    public void unFilterV(TableView<Vehicle> vehicleTable, Label label) {
-        ObservableList<Vehicle> vehicle =  FXCollections.observableList(vehicleList.stream()
-                        .filter(b -> b instanceof Vehicle)
-                                .collect(Collectors.toList()));
-        vehicleTable.getItems().clear();
-        vehicleTable.setItems(vehicleList);
+    public void unFilterV(TableView<Vehicle> vehicleTable) {
+        vehicleTable.refresh();
+        FileService fs = new FileService();
+        fs.readVehicles();
+        vehicleTable.setItems(getVehicleList());
     }
     public void addCar (Car car, TextField brandText, TextField modelText,
                       TextField loanableText, TextField vehicleTypeText, TextField hasRearCameraText,

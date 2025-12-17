@@ -1,7 +1,6 @@
 package File;
 
 import MemberPackage.Member;
-import MemberPackage.MemberRegistry;
 import Vehicle.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,7 +9,6 @@ import javafx.scene.control.TextField;
 import java.io.*;
 
 public class FileService {
-    MemberRegistry memberRegistry = new MemberRegistry();
     TextField writerText = new TextField();
     String memberFile = "members.csv";
     String vehicleFile = "Vehicle.csv";
@@ -34,7 +32,6 @@ public class FileService {
         }
         return members;
     }
-//en rad för varje rad i tabellen, för varje member
     public void writeFile(ObservableList<Member> members) {
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(memberFile))) {
@@ -46,6 +43,22 @@ public class FileService {
         } catch (IOException eFile) {
             writerText.setText("Gick inte att spara");
         }
+    }
+    public ObservableList<Vehicle> readBikes() {
+        ObservableList<Vehicle> vehicles2 = FXCollections.observableArrayList();
+        try (BufferedReader reader = new BufferedReader(new FileReader(bikeFile))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] values = line.split(",");
+                Bike bike = new Bike(values[0], values[1], Boolean.parseBoolean(values[2]), values[3], values[4]);
+                vehicles2.add(bike);
+            }
+        } catch (IOException error) {
+            writerText.setText("Problem att läsa in");
+            System.out.println("Kunde inte läsa in Bikes");
+            System.out.println(error.getMessage());
+        }
+        return vehicles2;
     }
     public ObservableList<Vehicle> readVehicles() {
         ObservableList<Vehicle> vehicles = FXCollections.observableArrayList();
@@ -59,33 +72,8 @@ public class FileService {
         } catch (IOException error) {
             writerText.setText("Problem att läsa in");
         }
+        ObservableList<Vehicle> result = readBikes();
+        vehicles.addAll(result);
         return vehicles;
-    }
-
-    public ObservableList<Vehicle> readBikes() {
-        ObservableList<Vehicle> vehicles = FXCollections.observableArrayList();
-        try (BufferedReader reader = new BufferedReader(new FileReader(bikeFile))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] values = line.split(",");
-                Bike bike = new Bike(values[0], values[1], Boolean.parseBoolean(values[2]), values[3], values[4]);
-                vehicles.add(bike);
-            }
-        } catch (IOException error) {
-            writerText.setText("Problem att läsa in");
-            System.out.println("Kunde inte läsa in Bikes");
-        }
-        return vehicles;
-    }
-    public void writeObj () {
-        ObservableList<Vehicle> vehicles = FXCollections.observableArrayList();
-        Vehicle car = new Car();
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(vehicleFile))) {
-
-            out.writeObject(car);
-            System.out.println("Det har gått bra att spara");
-        } catch (IOException e) {
-            System.out.println("Det har gått fel nu");
-        }
     }
 }

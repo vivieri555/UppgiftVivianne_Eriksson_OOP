@@ -1,10 +1,8 @@
 package MemberPackage;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TextField;
-import java.util.Scanner;
 
 public class MembershipService{
-    Scanner input = new Scanner(System.in);
     MemberRegistry memberRegistry;
 
     public MembershipService(MemberRegistry memberRegistry){
@@ -18,22 +16,17 @@ public class MembershipService{
             }
         } return null;
     }
-
     public ObservableList<Member> getMembers() {
         return memberRegistry.getMembers();
     }
-    public void changeHistory(Member member){
-        System.out.println("Skriv in ändring till historiken");
-        member.setHistory(input.nextLine());
-    }
-            public int addId(TextField addMemText, Member member3) {
-                int id = 0;
-                try {
-                  id = Integer.parseInt(addMemText.getText());
-                    member3.setId(id);
-                }
-                catch (NumberFormatException e2) {
-                    addMemText.setText("Inte ett giltigt nummer");
+    public int addId(TextField addMemText, Member member3) {
+        int id = 0;
+        try {
+            id = Integer.parseInt(addMemText.getText());
+            member3.setId(id);
+        }
+        catch (NumberFormatException e2) {
+            addMemText.setText("Inte ett giltigt nummer");
         } return id;
     }
     public void delMember(Member searchedMember) {

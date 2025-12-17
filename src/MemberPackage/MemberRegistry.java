@@ -8,7 +8,6 @@ public class MemberRegistry {
 
     private ObservableList<Member> members = FXCollections.observableArrayList();
 
-
     public MemberRegistry(){}
     public MemberRegistry(ObservableList<Member> members){
         this.members = members;

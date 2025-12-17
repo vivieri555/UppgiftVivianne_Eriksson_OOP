@@ -50,7 +50,7 @@ public class RentalService implements PricePolicy{
         }
         public void terminateRental(String name, Label termLabel, Label terminate){
         for(Rental rental: rentals){
-            if(rental.getMember().equals(name)){
+            if(rental.getMember().getName().equals(name)){
                 termLabel.setText("Avslutar bokning på " + rental.getMember().getName());
                 System.out.println("Avslutar bokning på " + rental.getMember().getName());
                 rental.getVehicle().setLoanable(true);
@@ -64,10 +64,10 @@ public class RentalService implements PricePolicy{
         }
     }
     @Override
-    public double getDiscountedCost(Rental rental) {
+    public double getDiscountedCost(Rental rental, Label discountLabel) {
         double discountedCost = 0;
         if (rental.member.getStatus().equalsIgnoreCase("Premium")) {
-            System.out.println("Medlemmen kan få rabatt 100 kr på varje uthyrning");
+            discountLabel.setText("Medlemmen kan få rabatt 100 kr på varje uthyrning");
             discountedCost = cost(rental.getRentalDays()) -100;
         }
         else{
@@ -77,36 +77,35 @@ public class RentalService implements PricePolicy{
     }
     public String available(){
         String text = "";
+        StringBuilder textBuilder = new StringBuilder();
         for(Vehicle vehicle: inventory.getVehicleList()){
             if(vehicle.isLoanable()){
-                System.out.println(vehicle + " är tillgänglig att låna.");
-                text = vehicle + " är tillgänglig att låna.\n";
-                //available.setText(vehicle + " är tillgänglig att låna.\n");
+                textBuilder.append(vehicle.getBrand() + ", ").append(vehicle.getModel()).append("\n");
             }
+            text = textBuilder.toString();
         } return text;
     }
-    public void bookVehicle(Member searchedNamed, TextField booking, TextField days,
-                            Label search, Label changeHistory, TextField historyText, Label saved) {
+    public void bookVehicle(Vehicle vehicle, Member searchedNamed, TextField booking, TextField days,
+                            Label search, Label discountLabel, TextField historyText, Label saved) {
         Rental rental = new Rental();
         rental.setMember(searchedNamed);
         booking.clear();
 
         booking.getText();
-        Vehicle car1 = searchCar(booking.getText());
-        if (car1 == null || !car1.isLoanable()) {
+        if (vehicle == null || !vehicle.isLoanable()) {
             search.setText("Fordonet är inte tillgängligt att låna just nu");
         } else {
-            car1.setLoanable(false);
-            rental.setVehicle(car1);
+            vehicle.setLoanable(false);
+            rental.setVehicle(vehicle);
             booking.clear();
 
             String day = String.valueOf((days.getText()));
             rental.setRentalDays(Integer.parseInt(day));
             int amount = cost(Integer.parseInt(days.getText()));
-            search.setText("Kostnaden blir " + amount + " kr.");
+            search.setText("Kostnaden blir innan eventuell rabatt " + amount + " kr.");
             rental.setCost(amount);
 
-            double discount = getDiscountedCost(rental);
+            double discount = getDiscountedCost(rental, discountLabel);
             rental.setCost(discount);
             rentals.add(rental);
 

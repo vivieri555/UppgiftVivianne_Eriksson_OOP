@@ -27,8 +27,7 @@ public class Main extends Application {
         FileService fileService = new FileService();
         ObservableList<Member> members = fileService.readMembers();
         ObservableList<Vehicle> vehicles = fileService.readVehicles();
-        ObservableList<Vehicle> bikes = fileService.readBikes();
-        Inventory inventory = new Inventory(vehicles, bikes);
+        Inventory inventory = new Inventory(vehicles);
         MemberRegistry memberRegistry = new MemberRegistry(members);
         MembershipService membershipService = new MembershipService(memberRegistry);
         RentalService rentalService = new RentalService(inventory, membershipService);
@@ -39,7 +38,6 @@ public class Main extends Application {
 
 
         stage.setTitle("Vivis Biluthyrning");
-
         BorderPane borderPane = new BorderPane();
         borderPane.setPadding(new Insets(10, 10, 10, 10));
         Label headLabel = new Label("\tVälkommen\n till Vivis biluthyrning!");
@@ -63,23 +61,23 @@ public class Main extends Application {
         modelInput.setMinWidth(200);
 
         TableColumn<Vehicle, Boolean> loanableColumn = new TableColumn<>("Tillgänglig");
-        loanableColumn.setMinWidth(50);
+        loanableColumn.setMinWidth(200);
         loanableColumn.setCellValueFactory(new PropertyValueFactory<>("loanable"));
         TextField loanableInput = new TextField();
         loanableInput.setPromptText("Tillgänglig");
-        loanableInput.setMinWidth(50);
+        loanableInput.setMinWidth(200);
 
         TableColumn<Vehicle, String> vehicleTypeColumn = new TableColumn<>("Fordonstyp");
         vehicleTypeColumn.setMinWidth(200);
         vehicleTypeColumn.setCellValueFactory(new PropertyValueFactory<>("vehicleType"));
         TextField vehicleTypeInput = new TextField();
-        vehicleTypeInput.setMinWidth(100);
+        vehicleTypeInput.setMinWidth(200);
 
         TableColumn<Vehicle, String> hasRearCameraColumn = new TableColumn<>("Har backkamera");
-        hasRearCameraColumn.setMinWidth(50);
+        hasRearCameraColumn.setMinWidth(200);
         hasRearCameraColumn.setCellValueFactory(new PropertyValueFactory<>("hasRearCamera"));
         TextField hasRearCameraInput = new TextField();
-        hasRearCameraInput.setMinWidth(50);
+        hasRearCameraInput.setMinWidth(200);
 
         TableColumn<Vehicle, String> gearboxColumn = new TableColumn<>("Växellåda");
         gearboxColumn.setMinWidth(100);
@@ -94,20 +92,13 @@ public class Main extends Application {
         gearsInput.setMinWidth(200);
 
         TableColumn<Vehicle, String> basketColumn = new TableColumn<>("Cykelkorg");
-        basketColumn.setMinWidth(50);
+        basketColumn.setMinWidth(150);
         basketColumn.setCellValueFactory(new PropertyValueFactory<>("basket"));
         TextField basketInput = new TextField();
-        basketInput.setMinWidth(50);
+        basketInput.setMinWidth(150);
 
         vehicleTable.setItems(inventory.getVehicleList());
         vehicleTable.getColumns().addAll(brandColumn, modelColumn, loanableColumn, vehicleTypeColumn, hasRearCameraColumn, gearboxColumn, gearsColumn, basketColumn);
-
-        TableView<Vehicle> availableTable = new TableView<>();
-        TableColumn<Vehicle, String> availableColumn = new TableColumn<>("Tillgängliga märken");
-        availableColumn.setMinWidth(200);
-        availableColumn.setCellValueFactory(new PropertyValueFactory<>("brand"));
-        availableTable.getColumns().addAll(availableColumn);
-        availableTable.setItems(inventory.getVehicleList());
 
         //TableView medlemmar
         TableView<Member> table = new TableView<>();
@@ -177,7 +168,7 @@ public class Main extends Application {
         VBox vBox5 = new VBox();
         vBox5.setPadding(new Insets(10, 10, 10, 10));
         vBox5.setSpacing(10);
-        Scene scene3 = new Scene(vBox5, 1000, 1000);
+        Scene scene3 = new Scene(vBox5, 1500, 1000);
 
         HBox hBox3 = new HBox();
         hBox3.setPadding(new Insets(10, 10, 10, 10));
@@ -207,7 +198,7 @@ public class Main extends Application {
 
         Menu carMenu = new Menu("Fordon");
         MenuItem listCarMenu = new MenuItem("Hantera/Boka fordon...");
-        MenuItem availiableMenu = new MenuItem("Filtrera på tillgängliga bilar...");
+        MenuItem availbleMenu = new MenuItem("Filtrera på tillgängliga bilar...");
         MenuItem terminateRental = new MenuItem("Avsluta en uthyrning...");
 
         Menu revenueMenu = new Menu("Intäkter");
@@ -294,18 +285,20 @@ public class Main extends Application {
         TextField terminateText = new TextField();
         TextArea textArea = new TextArea();
         textArea.setEditable(false);
-        textArea.setPrefSize(200, 200);
+        textArea.setPrefSize(400, 200);
+        textArea.setWrapText(true);
 
         //knappar funktionalitet fordon
         listCarMenu.setOnAction(e -> {
             stage.setScene(scene3);
+            vehicleTable.refresh();
         });
 
-        availiableMenu.setOnAction(e -> {
+        availbleMenu.setOnAction(e -> {
             borderPane.setLeft(vBox6);
             availableButton.setOnAction(ev -> {
                 String result = rentalService.available();
-                textArea.setText(result);
+                textArea.appendText("Fordon tillgängliga: \n" + result);
             });
         });
 
@@ -317,6 +310,10 @@ public class Main extends Application {
 
         filterBike.setOnAction(e -> {
             inventory.filterV(vehicleTable);
+        });
+
+        unFilterBike.setOnAction(ev -> {
+            inventory.unFilterV(vehicleTable);
         });
 
         saveBikeB.setOnAction(e -> {alertVehicle.addBike(bike, brandText,
@@ -354,8 +351,8 @@ public class Main extends Application {
         terminateRental.setOnAction(e -> {
             borderPane.setCenter(vBox2);
             terminate.setText("Skriv namn på medlemmen du vill avsluta uthyrningen på");
-            String name = terminateText.getText();
             terminateButton.setOnAction(ev -> {
+                String name = terminateText.getText();
                 rentalService.terminateRental(name, termLabel, terminateLabel);});
         });
 
@@ -397,13 +394,12 @@ public class Main extends Application {
         searchMemberM.setOnAction(e -> {
             borderPane.setCenter(vBox3);
             addNameLabel.setText("Skriv in namnet på medlem du vill söka efter:");
-            String s = addName.getText();
+            addName.getText();
         });
         searchMButton.setOnAction(e -> {
             Member searchedMember = membershipService.searchMemberList(addName.getText());
             if(searchedMember == null){
-                String s = "Medlemmen finns inte";
-                saveLabel.setText(s);
+                saveLabel.setText("Medlemmen finns inte");
             } else {
                 String found = "Hittat medlemmen: " + searchedMember.getId() + ", "+ searchedMember.getName() + ", "
                         + searchedMember.getStatus() + ", " + searchedMember.getHistory();
@@ -426,7 +422,7 @@ public class Main extends Application {
         MenuBar menuBar = new MenuBar();
         menuBar.getMenus().addAll(memberMenu, carMenu, revenueMenu);
         memberMenu.getItems().addAll(addMemberM, searchMemberM);
-        carMenu.getItems().addAll(listCarMenu, availiableMenu, terminateRental);
+        carMenu.getItems().addAll(listCarMenu, availbleMenu, terminateRental);
 
         borderPane.setCenter(headLabel);
         borderPane.setTop(menuBar);
@@ -451,9 +447,9 @@ public class Main extends Application {
         hBox3.getChildren().addAll(brandInput, modelInput, loanableInput, vehicleTypeInput,
                 hasRearCameraInput, gearboxInput, gearsInput, basketInput);
         vBox5.getChildren().addAll(returnScene2, bookCarLabel, bookVehicleButton,
-                filterBike, vehicleTable,
+                filterBike, unFilterBike, vehicleTable,
                 vehicleLabel, saveCarB, saveBikeB, changeCarB, deleteVButton);
-        //Försöka söka på tillgängliga bilar
+        //söka på tillgängliga bilar
         vBox6.getChildren().addAll(availableButton, availableLabel, textArea);
 
         borderPane.getChildren().addAll();
